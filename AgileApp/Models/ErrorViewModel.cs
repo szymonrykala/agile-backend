@@ -1,4 +1,4 @@
-namespace WebApplication.Models
+namespace AgileApp.Models
 {
     public class ErrorViewModel
     {

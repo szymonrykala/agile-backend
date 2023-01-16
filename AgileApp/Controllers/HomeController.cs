@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AgileApp.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplication.Models;
 
-namespace WebApplication.Controllers
+namespace AgileApp.Controllers
 {
     public class HomeController : Controller
     {
