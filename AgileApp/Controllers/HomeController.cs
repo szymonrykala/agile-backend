@@ -15,17 +15,6 @@ namespace AgileApp.Controllers
 
         public IActionResult Index()
         {
-
-            using var ctx = new AgileContext();
-            _ = ctx.Database.EnsureCreated();
-
-            // Insert a Blog
-            ctx?.Users?.Add(new() { Id=2, Name = "FooUser2" });
-            ctx?.SaveChanges();
-
-            // Query all blogs who's name starts with F
-            var fBlogs = ctx?.Users?.Where(b => b.Name.StartsWith("F")).ToList();
-
             return View();
         }
 

@@ -1,11 +1,11 @@
-﻿using AgileApp.Models;
+﻿using AgileApp.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AgileApp
 {
-    public class AgileContext : DbContext
+    public class AgileDbContext : DbContext
     {
-        public DbSet<User>? Users { get; set; }
+        public DbSet<UserDb>? Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql(@"Host=localhost;Username=postgres;Password=student;Database=AgileDb");
