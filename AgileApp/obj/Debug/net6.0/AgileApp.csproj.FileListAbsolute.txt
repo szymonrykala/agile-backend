@@ -47,3 +47,8 @@ A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\System.Text.Json.dll
 A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 A:\Studies\AgileBackend\AgileApp\obj\Debug\net6.0\AgileApp.csproj.CopyComplete
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
