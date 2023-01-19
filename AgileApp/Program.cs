@@ -1,6 +1,8 @@
 using AgileApp;
 using AgileApp.Repository.Users;
 using AgileApp.Services.Users;
+using AgileApp.Utils.Authorization;
+using AgileApp.Utils.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<AgileDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IJwtHelper, JwtHelper>();
+builder.Services.AddScoped<ICookieHelper, CookieHelper>();
 
 var app = builder.Build();
 
