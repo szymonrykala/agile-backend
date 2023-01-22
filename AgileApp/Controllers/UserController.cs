@@ -58,14 +58,19 @@ namespace AgileApp.Controllers
 
             var isEmailTaken = _userService.IsEmailTaken(request.Email);
 
-            if (!isEmailTaken)
+            if (request.Email == null || request.FirstName == null || request.LastName == null)
+            {
+                return new OkObjectResult(Models.Common.Response.Failed());
+            }
+
+            if (isEmailTaken)
             {
                 return new OkObjectResult(Models.Common.Response.Failed());
             }
 
             var registerResult = _userService.AddUser(request);
 
-            if (registerResult != null)
+            if (registerResult == null)
             {
                 return new OkObjectResult(Models.Common.Response.Failed());
             }
