@@ -5,7 +5,7 @@ namespace AgileApp.Services.Users
 {
     public interface IUserService
     {
-        Task<AuthorizeClientResult> AuthorizeUser(AuthorizationDataRequest request);
+        Task<AuthorizeUserResult> AuthorizeUser(AuthorizationDataRequest request);
 
         //response may be changed after the design!!!
         public List<UserResponse> GetAllUsers();
@@ -18,7 +18,7 @@ namespace AgileApp.Services.Users
 
         public string AddUser(AuthorizationDataRequest request);
 
-        public bool UpdateUser(UserResponse user);
+        public bool UpdateUser(UpdateUserRequest user);
 
         public bool DeleteUser(int id);
 

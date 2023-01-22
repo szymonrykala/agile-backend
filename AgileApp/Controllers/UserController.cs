@@ -1,4 +1,5 @@
-﻿using AgileApp.Models.Requests;
+﻿using AgileApp.Models;
+using AgileApp.Models.Requests;
 using AgileApp.Services.Users;
 using AgileApp.Utils.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,9 @@ namespace AgileApp.Controllers
         [HttpPost]
         public IActionResult AddUser([FromBody] AuthorizationDataRequest request)
         {
-            if (request == null || !request.IsValid)
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (request == null || !request.IsValid || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
@@ -94,6 +97,61 @@ namespace AgileApp.Controllers
             return string.IsNullOrWhiteSpace(hash)
                 ? (IActionResult)new BadRequestResult()
                 : new OkObjectResult(_userService.GetAllUsers());
+        }
+
+        [HttpGet]
+        public IActionResult GetUserById(int id)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (id < 1 || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(_userService.GetUserById(id));
+        }
+
+        [HttpPatch]
+        public IActionResult UpdateUser([FromBody] UpdateUserRequest request)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (request == null || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+
+            var userUpdate = new UpdateUserRequest();
+            try
+            {
+                userUpdate.Id = request.Id;
+                userUpdate.FirstName = request.FirstName ?? string.Empty;
+                userUpdate.LastName = request.LastName ?? string.Empty;
+                userUpdate.Email = request.Email ?? string.Empty;
+                userUpdate.Password = request.Password ?? string.Empty;
+                userUpdate.Role = request.Role ?? _userService.GetUserById(request.Id).Role;
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(_userService.UpdateUser(userUpdate));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser(int id)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (id < 1 || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(_userService.DeleteUser(id));
         }
     }
 }

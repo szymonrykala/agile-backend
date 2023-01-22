@@ -2,6 +2,7 @@
 using AgileApp.Models;
 using AgileApp.Models.Requests;
 using AgileApp.Repository.Users;
+using AgileApp.Utils;
 
 namespace AgileApp.Services.Users
 {
@@ -18,7 +19,7 @@ namespace AgileApp.Services.Users
             _userRepository = userRepository;
         }
 
-        public async Task<AuthorizeClientResult> AuthorizeUser(AuthorizationDataRequest request)
+        public async Task<AuthorizeUserResult> AuthorizeUser(AuthorizationDataRequest request)
         {
             try
             {
@@ -27,13 +28,13 @@ namespace AgileApp.Services.Users
                     .FirstOrDefault();
 
                 return requestedUser != null
-                    ? AuthorizeClientResult.Exist(requestedUser.Hash)
-                    : AuthorizeClientResult.NotExist();
+                    ? AuthorizeUserResult.Exist(requestedUser.Hash)
+                    : AuthorizeUserResult.NotExist();
             }
             catch (Exception ex)
             {
                 //_logger.LogCritical(ex.ToString());
-                return new AuthorizeClientResult();
+                return new AuthorizeUserResult();
             }
         }
 
@@ -75,29 +76,66 @@ namespace AgileApp.Services.Users
             }
         }
 
-        public bool DeleteUser(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public bool DeleteUser(int id) => _userRepository.DeleteUser(id) == 1;
 
         public UserResponse GetUserByEmail(string email)
         {
-            throw new NotImplementedException();
+            var response = new UserResponse();
+            var userDb = _userRepository.GetUserByEmail(email);
+
+            if (userDb != null)
+            {
+                response.FirstName = userDb.FirstName;
+                response.LastName = userDb.LastName;
+                response.Email = userDb.Email;
+            }
+
+            return response;
         }
 
         public UserResponse GetUserById(int id)
         {
-            throw new NotImplementedException();
+            var response = new UserResponse();
+            var userDb = _userRepository.GetUserById(id);
+
+            if (userDb != null)
+            {
+                response.FirstName = userDb.FirstName;
+                response.LastName = userDb.LastName;
+                response.Email = userDb.Email;
+            }
+
+            return response;
         }
 
         public UserResponse GetUserByName(string userName)
         {
-            throw new NotImplementedException();
+            var response = new UserResponse();
+            var userDb = _userRepository.GetUserByName(userName);
+
+            if (userDb != null)
+            {
+                response.FirstName = userDb.FirstName;
+                response.LastName = userDb.LastName;
+                response.Email = userDb.Email;
+            }
+
+            return response;
         }
 
-        public bool UpdateUser(UserResponse user)
+        public bool UpdateUser(UpdateUserRequest user)
         {
-            throw new NotImplementedException();
+            var dbUser = _userRepository.GetUserById(user.Id);
+
+            dbUser.FirstName = dbUser.FirstName.UserStringCompare(user.FirstName);
+            dbUser.LastName = dbUser.LastName.UserStringCompare(user.LastName);
+            dbUser.Email = dbUser.Email.UserStringCompare(user.Email);
+
+            dbUser.Password = dbUser.Password.UserStringCompare(user.Password);
+            dbUser.Role = (UserRoleEnum)(user.Role != dbUser.Role ? user.Role : dbUser.Role);
+
+            return _userRepository.UpdateUser(dbUser) == 1;
+
         }
 
         public bool IsEmailTaken(string email)
