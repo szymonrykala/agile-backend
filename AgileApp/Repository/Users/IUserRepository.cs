@@ -6,5 +6,8 @@ namespace AgileApp.Repository.Users
     {
         public IEnumerable<UserDb> GetAllUsers(Func<UserDb, bool> predicate);
 
+        bool IsEmailAlreadyUsed(string email);
+
+        int AddNewUser(UserDb user);
     }
 }

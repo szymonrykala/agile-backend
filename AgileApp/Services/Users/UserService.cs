@@ -1,5 +1,6 @@
 ﻿using AgileApp.Enums;
 using AgileApp.Models;
+using AgileApp.Models.Requests;
 using AgileApp.Repository.Users;
 
 namespace AgileApp.Services.Users
@@ -17,6 +18,25 @@ namespace AgileApp.Services.Users
             _userRepository = userRepository;
         }
 
+        public async Task<AuthorizeClientResult> AuthorizeUser(AuthorizationDataRequest request)
+        {
+            try
+            {
+                var requestedUser = _userRepository
+                    .GetAllUsers(u => request.Email == u.Email && request.Password == u.Password)
+                    .FirstOrDefault();
+
+                return requestedUser != null
+                    ? AuthorizeClientResult.Exist(requestedUser.Hash)
+                    : AuthorizeClientResult.NotExist();
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogCritical(ex.ToString());
+                return new AuthorizeClientResult();
+            }
+        }
+
         public List<UserResponse> GetAllUsers()
         {
             var response = new List<UserResponse>();
@@ -28,9 +48,31 @@ namespace AgileApp.Services.Users
             return response;
         }
 
-        public bool AddUser(UserResponse newUser)
+        public string AddUser(AuthorizationDataRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string clientHash = Guid.NewGuid().ToString();
+
+                int affectedRows = _userRepository.AddNewUser(new Repository.Models.UserDb
+                {
+                    Email = request.Email,
+                    Password = request.Password,
+                    Hash = clientHash,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Role = (UserRoleEnum)request.Role
+                });
+
+                return affectedRows == 1
+                    ? clientHash
+                    : "";
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogCritical(ex.ToString());
+                return "";
+            }
         }
 
         public bool DeleteUser(int id)
@@ -56,6 +98,19 @@ namespace AgileApp.Services.Users
         public bool UpdateUser(UserResponse user)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsEmailTaken(string email)
+        {
+            try
+            {
+                return _userRepository.IsEmailAlreadyUsed(email);
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogCritical(ex.ToString());
+                return false;
+            }
         }
     }
 }

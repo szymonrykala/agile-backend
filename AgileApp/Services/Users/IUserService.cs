@@ -1,9 +1,12 @@
 ﻿using AgileApp.Models;
+using AgileApp.Models.Requests;
 
 namespace AgileApp.Services.Users
 {
     public interface IUserService
     {
+        Task<AuthorizeClientResult> AuthorizeUser(AuthorizationDataRequest request);
+
         //response may be changed after the design!!!
         public List<UserResponse> GetAllUsers();
 
@@ -13,10 +16,12 @@ namespace AgileApp.Services.Users
 
         public UserResponse GetUserByEmail(string email);
 
-        public bool AddUser(UserResponse newUser);
+        public string AddUser(AuthorizationDataRequest request);
 
         public bool UpdateUser(UserResponse user);
 
         public bool DeleteUser(int id);
+
+        public bool IsEmailTaken(string email);
     }
 }

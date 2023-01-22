@@ -15,5 +15,7 @@ namespace AgileApp.Repository.Models
         public UserRoleEnum Role { get; set; }
 
         public string Password { get; set; }
+
+        public string Hash { get; set; }
     }
 }

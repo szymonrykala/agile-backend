@@ -15,5 +15,12 @@ namespace AgileApp.Repository.Users
 
         public IEnumerable<UserDb> GetAllUsers(Func<UserDb, bool> predicate) => UserEntities.Where(predicate).ToList();
 
+        public bool IsEmailAlreadyUsed(string email) => UserEntities.Any(u => u.Email == email);
+
+        public int AddNewUser(UserDb user)
+        {
+            _dbContext.Users.Add(user);
+            return _dbContext.SaveChanges();
+        }
     }
 }
