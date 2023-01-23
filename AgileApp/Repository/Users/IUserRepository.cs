@@ -19,7 +19,5 @@ namespace AgileApp.Repository.Users
         int UpdateUser(UserDb user);
 
         int DeleteUser(int id);
-
-
     }
 }

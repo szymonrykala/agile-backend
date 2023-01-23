@@ -1,5 +1,4 @@
 ﻿using AgileApp.Models.Projects;
-using AgileApp.Models.Requests;
 
 namespace AgileApp.Services.Projects
 {

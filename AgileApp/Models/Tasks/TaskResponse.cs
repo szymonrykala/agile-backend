@@ -1,6 +1,6 @@
-﻿namespace AgileApp.Models.Requests
+﻿namespace AgileApp.Models.Tasks
 {
-    public class AddProjectRequest
+    public class TaskResponse
     {
         public string Name { get; set; }
 
