@@ -135,7 +135,6 @@ namespace AgileApp.Services.Users
             dbUser.Role = (UserRoleEnum)(user.Role != dbUser.Role ? user.Role : dbUser.Role);
 
             return _userRepository.UpdateUser(dbUser) == 1;
-
         }
 
         public bool IsEmailTaken(string email)
