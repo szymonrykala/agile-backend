@@ -1,5 +1,9 @@
 using AgileApp;
+using AgileApp.Repository.Projects;
+using AgileApp.Repository.Tasks;
 using AgileApp.Repository.Users;
+using AgileApp.Services.Projects;
+using AgileApp.Services.Tasks;
 using AgileApp.Services.Users;
 using AgileApp.Utils.Authorization;
 using AgileApp.Utils.Cookies;
@@ -12,6 +16,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<AgileDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 builder.Services.AddScoped<IJwtHelper, JwtHelper>();
 builder.Services.AddScoped<ICookieHelper, CookieHelper>();
