@@ -88,13 +88,16 @@ namespace AgileApp.Controllers
                 taskUpdate.Id = request.Id;
                 taskUpdate.Name = request.Name ?? string.Empty;
                 taskUpdate.Description = request.Description ?? string.Empty;
+                taskUpdate.Status = request.Status;
+                taskUpdate.UserId = request.UserId;
+                taskUpdate.ProjectId = request.ProjectId;
+
+                return new OkObjectResult(_taskService.UpdateTask(taskUpdate));
             }
             catch (Exception)
             {
                 return BadRequest();
             }
-
-            return new OkObjectResult(_taskService.UpdateTask(taskUpdate));
         }
 
         [HttpDelete]

@@ -19,10 +19,10 @@ namespace AgileApp.Services.Tasks
         public List<TaskResponse> GetAllTasks()
         {
             var response = new List<TaskResponse>();
-            var tasksDb = _taskRepository.GetAllTasks(p => string.IsNullOrWhiteSpace(p.Name)).ToList();
+            var tasksDb = _taskRepository.GetAllTasks(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
             foreach (var task in tasksDb)
-                response.Add(new TaskResponse { Name = task.Name, Description = task.Description });
+                response.Add(new TaskResponse { Name = task.Name, Description = task.Description, Status = task.Status });
 
             return response;
         }
