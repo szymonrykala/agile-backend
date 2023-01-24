@@ -77,12 +77,19 @@ namespace AgileApp.Services.Projects
 
         public bool UpdateProject(UpdateProjectRequest project)
         {
-            var dbProject = _projectRepository.GetProjectById(project.Id);
+            try
+            {
+                var dbProject = _projectRepository.GetProjectById(project.Id);
 
-            dbProject.Name = dbProject.Name.UserStringCompare(project.Name);
-            dbProject.Description = dbProject.Description.UserStringCompare(project.Description);
+                dbProject.Name = dbProject.Name.PropertyStringCompare(project.Name);
+                dbProject.Description = dbProject.Description.PropertyStringCompare(project.Description);
 
-            return _projectRepository.UpdateProject(dbProject) == 1;
+                return _projectRepository.UpdateProject(dbProject) == 1;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

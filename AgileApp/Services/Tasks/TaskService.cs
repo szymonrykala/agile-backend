@@ -1,4 +1,5 @@
-﻿using AgileApp.Models.Tasks;
+﻿using AgileApp.Enums;
+using AgileApp.Models.Tasks;
 using AgileApp.Repository.Tasks;
 using AgileApp.Utils;
 
@@ -33,7 +34,10 @@ namespace AgileApp.Services.Tasks
                 int affectedRows = _taskRepository.AddNewTask(new Repository.Models.TaskDb
                 {
                     Name = task.Name,
-                    Description = task.Description
+                    UserId = task.UserId,
+                    Status = task.Status,
+                    ProjectId = task.ProjectId,
+                    Description = task.Description,
                 });
 
                 return affectedRows == 1
@@ -54,6 +58,7 @@ namespace AgileApp.Services.Tasks
             if (userDb != null)
             {
                 response.Name = userDb.Name;
+                response.Status = userDb.Status;
                 response.Description = userDb.Description;
             }
 
@@ -68,6 +73,7 @@ namespace AgileApp.Services.Tasks
             if (userDb != null)
             {
                 response.Name = userDb.Name;
+                response.Status = userDb.Status;
                 response.Description = userDb.Description;
             }
 
@@ -76,12 +82,23 @@ namespace AgileApp.Services.Tasks
 
         public bool UpdateTask(UpdateTaskRequest task)
         {
-            var dbTask = _taskRepository.GetTaskById(task.Id);
+            try
+            {
+                var dbTask = _taskRepository.GetTaskById(task.Id);
 
-            dbTask.Name = dbTask.Name.UserStringCompare(task.Name);
-            dbTask.Description = dbTask.Description.UserStringCompare(task.Description);
+                dbTask.Name = dbTask.Name.PropertyStringCompare(task.Name);
+                dbTask.Description = dbTask.Description.PropertyStringCompare(task.Description);
 
-            return _taskRepository.UpdateTask(dbTask) == 1;
+                dbTask.UserId = task.UserId != null && task.UserId > 0 ? (int)task.UserId : dbTask.UserId;
+                dbTask.ProjectId = task.ProjectId != null && task.ProjectId > 0 ? (int)task.ProjectId : dbTask.ProjectId;
+                dbTask.Status = task.Status != null && task.Status != dbTask.Status ? (UserTaskStatus)task.Status : dbTask.Status;
+
+                return _taskRepository.UpdateTask(dbTask) == 1;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

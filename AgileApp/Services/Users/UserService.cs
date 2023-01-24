@@ -8,14 +8,11 @@ namespace AgileApp.Services.Users
 {
     public class UserService : IUserService
     {
-        //private readonly ILogger _logger;
         private readonly IUserRepository _userRepository;
 
         public UserService(
-            //ILogger logger,
             IUserRepository userRepository)
         {
-            //_logger = logger;
             _userRepository = userRepository;
         }
 
@@ -33,7 +30,6 @@ namespace AgileApp.Services.Users
             }
             catch (Exception ex)
             {
-                //_logger.LogCritical(ex.ToString());
                 return new AuthorizeUserResult();
             }
         }
@@ -57,11 +53,11 @@ namespace AgileApp.Services.Users
 
                 int affectedRows = _userRepository.AddNewUser(new Repository.Models.UserDb
                 {
+                    Hash = clientHash,
                     Email = request.Email,
                     Password = request.Password,
-                    Hash = clientHash,
-                    FirstName = request.FirstName,
                     LastName = request.LastName,
+                    FirstName = request.FirstName,
                     Role = (UserRoleEnum)request.Role
                 });
 
@@ -71,8 +67,7 @@ namespace AgileApp.Services.Users
             }
             catch (Exception ex)
             {
-                //_logger.LogCritical(ex.ToString());
-                return "";
+                return ex.Message;
             }
         }
 
@@ -85,9 +80,9 @@ namespace AgileApp.Services.Users
 
             if (userDb != null)
             {
-                response.FirstName = userDb.FirstName;
-                response.LastName = userDb.LastName;
                 response.Email = userDb.Email;
+                response.LastName = userDb.LastName;
+                response.FirstName = userDb.FirstName;
             }
 
             return response;
@@ -100,9 +95,9 @@ namespace AgileApp.Services.Users
 
             if (userDb != null)
             {
-                response.FirstName = userDb.FirstName;
-                response.LastName = userDb.LastName;
                 response.Email = userDb.Email;
+                response.LastName = userDb.LastName;
+                response.FirstName = userDb.FirstName;
             }
 
             return response;
@@ -115,9 +110,9 @@ namespace AgileApp.Services.Users
 
             if (userDb != null)
             {
-                response.FirstName = userDb.FirstName;
-                response.LastName = userDb.LastName;
                 response.Email = userDb.Email;
+                response.LastName = userDb.LastName;
+                response.FirstName = userDb.FirstName;
             }
 
             return response;
@@ -125,16 +120,23 @@ namespace AgileApp.Services.Users
 
         public bool UpdateUser(UpdateUserRequest user)
         {
-            var dbUser = _userRepository.GetUserById(user.Id);
+            try
+            {
+                var dbUser = _userRepository.GetUserById(user.Id);
 
-            dbUser.FirstName = dbUser.FirstName.UserStringCompare(user.FirstName);
-            dbUser.LastName = dbUser.LastName.UserStringCompare(user.LastName);
-            dbUser.Email = dbUser.Email.UserStringCompare(user.Email);
+                dbUser.Email = dbUser.Email.PropertyStringCompare(user.Email);
+                dbUser.LastName = dbUser.LastName.PropertyStringCompare(user.LastName);
+                dbUser.FirstName = dbUser.FirstName.PropertyStringCompare(user.FirstName);
 
-            dbUser.Password = dbUser.Password.UserStringCompare(user.Password);
-            dbUser.Role = (UserRoleEnum)(user.Role != dbUser.Role ? user.Role : dbUser.Role);
+                dbUser.Password = dbUser.Password.PropertyStringCompare(user.Password);
+                dbUser.Role = user.Role != null && user.Role != dbUser.Role ? (UserRoleEnum)user.Role : dbUser.Role;
 
-            return _userRepository.UpdateUser(dbUser) == 1;
+                return _userRepository.UpdateUser(dbUser) == 1;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool IsEmailTaken(string email)
@@ -143,9 +145,8 @@ namespace AgileApp.Services.Users
             {
                 return _userRepository.IsEmailAlreadyUsed(email);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //_logger.LogCritical(ex.ToString());
                 return false;
             }
         }

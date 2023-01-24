@@ -2,7 +2,7 @@
 {
     public static class StringExtensions
     {
-        public static string UserStringCompare(this string s, string newProperty)
+        public static string PropertyStringCompare(this string s, string newProperty)
         {
             if (newProperty != null && !string.IsNullOrWhiteSpace(newProperty) && newProperty != s)
                 return newProperty;

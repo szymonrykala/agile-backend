@@ -44,6 +44,9 @@ namespace AgileApp.Repository.Tasks
             if (projectToUpdate != null)
             {
                 projectToUpdate.Name = task.Name;
+                projectToUpdate.UserId = task.UserId;
+                projectToUpdate.Status = task.Status;
+                projectToUpdate.ProjectId = task.ProjectId;
                 projectToUpdate.Description = task.Description;
 
                 return _dbContext.SaveChanges();

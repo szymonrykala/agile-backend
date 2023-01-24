@@ -9,16 +9,13 @@ namespace AgileApp.Controllers
     [Route("users/[action]")]
     public class UserController : Controller
     {
-        //private readonly ILogger _logger;
         private readonly IUserService _userService;
         private readonly ICookieHelper _cookieHelper;
 
         public UserController(
-            //ILogger logger,
             IUserService userService,
             ICookieHelper cookieHelper)
         {
-            //_logger = logger;
             _userService = userService;
             _cookieHelper = cookieHelper;
         }
