@@ -13,9 +13,9 @@ namespace AgileApp.Utils.Cookies
             _jwtHelper = jwtHelper;
         }
 
-        public void AddJwtToHttpOnlyResponseCookie(HttpContext context, string email, string hash)
+        public void AddJwtToHttpOnlyResponseCookie(HttpContext context, string email, int id, int role)
         {
-            string jwtToken = _jwtHelper.GenerateTokenFromLoginData(email, hash);
+            string jwtToken = _jwtHelper.GenerateTokenFromLoginData(email, id, role);
             context.Response.Cookies.Append(AppSettings.JwtCookieKey,
                 jwtToken,
                 new CookieOptions

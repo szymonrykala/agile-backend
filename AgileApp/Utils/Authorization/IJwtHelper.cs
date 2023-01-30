@@ -17,6 +17,6 @@ namespace AgileApp.Utils.Authorization
         /// <param name="email">Email used to log in</param>
         /// <param name="hash">Hash to identify user in database</param>
         /// <returns>Generated token or empty string if error occured</returns>
-        string GenerateTokenFromLoginData(string email, string hash);
+        string GenerateTokenFromLoginData(string email, int id, int role);
     }
 }
