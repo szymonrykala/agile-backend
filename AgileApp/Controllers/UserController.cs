@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AgileApp.Controllers
 {
-    [Route("users/[action]")]
+    [Route("users/")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -20,10 +20,10 @@ namespace AgileApp.Controllers
             _cookieHelper = cookieHelper;
         }
 
-        [HttpDelete]
+        [HttpDelete("logout/")]
         public IActionResult Logout() => new OkObjectResult(_cookieHelper.InvalidateJwtCookie(HttpContext));
 
-        [HttpPost]
+        [HttpPost("login/")]
         public async Task<IActionResult> Login([FromBody] AuthorizationDataRequest request)
         {
             if (request == null)
@@ -46,7 +46,7 @@ namespace AgileApp.Controllers
             return new OkObjectResult(true);
         }
 
-        [HttpPost]
+        [HttpPost("")]
         public IActionResult AddUser([FromBody] AuthorizationDataRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -79,7 +79,7 @@ namespace AgileApp.Controllers
             return new OkObjectResult(true);
         }
 
-        [HttpGet]
+        [HttpGet("")]
         public IActionResult GetAllUsers()
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -96,20 +96,20 @@ namespace AgileApp.Controllers
                 : new OkObjectResult(_userService.GetAllUsers());
         }
 
-        [HttpGet]
-        public IActionResult GetUserById(int id)
+        [HttpGet("{userId}")]
+        public IActionResult GetUserById(int userId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (userId < 1 || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_userService.GetUserById(id));
+            return new OkObjectResult(_userService.GetUserById(userId));
         }
 
-        [HttpPatch]
+        [HttpPatch("{userId}")]
         public IActionResult UpdateUser([FromBody] UpdateUserRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -138,17 +138,17 @@ namespace AgileApp.Controllers
             return new OkObjectResult(_userService.UpdateUser(userUpdate));
         }
 
-        [HttpDelete]
-        public IActionResult DeleteUser(int id)
+        [HttpDelete("{userId}")]
+        public IActionResult DeleteUser(int userId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (userId < 1 || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_userService.DeleteUser(id));
+            return new OkObjectResult(_userService.DeleteUser(userId));
         }
     }
 }
