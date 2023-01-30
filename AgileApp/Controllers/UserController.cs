@@ -1,4 +1,5 @@
-﻿using AgileApp.Models;
+﻿using AgileApp.Enums;
+using AgileApp.Models;
 using AgileApp.Models.Requests;
 using AgileApp.Services.Users;
 using AgileApp.Utils.Cookies;
@@ -40,7 +41,7 @@ namespace AgileApp.Controllers
 
             if (authorizationResult.Exists)
             {
-                _cookieHelper.AddJwtToHttpOnlyResponseCookie(HttpContext, request.Email, authorizationResult.Hash);
+                _cookieHelper.AddJwtToHttpOnlyResponseCookie(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
             }
 
             return new OkObjectResult(true);
@@ -51,7 +52,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !request.IsValid || !reverseTokenResult.IsValid)
+            if (request == null || !request.IsValid || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -75,7 +76,6 @@ namespace AgileApp.Controllers
                 return new OkObjectResult(Models.Common.Response.Failed());
             }
 
-            _cookieHelper.AddJwtToHttpOnlyResponseCookie(HttpContext, request.Email, registerResult);
             return new OkObjectResult(true);
         }
 
@@ -84,7 +84,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid)
+            if (!reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return new BadRequestResult();
             }
@@ -114,7 +114,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid)
+            if (request == null || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -143,7 +143,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (userId < 1 || !reverseTokenResult.IsValid)
+            if (userId < 1 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
