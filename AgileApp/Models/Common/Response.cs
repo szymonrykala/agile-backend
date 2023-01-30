@@ -4,6 +4,8 @@
     {
         public bool IsSuccess { get; set; }
 
+        public string Error { get; set; }
+
         public static Response Succeeded()
             => new Response
             {
@@ -20,6 +22,8 @@
     public class Response<T>
     {
         public bool IsSuccess { get; set; }
+
+        public string Error { get; set; }
 
         public T Data { get; set; }
 
