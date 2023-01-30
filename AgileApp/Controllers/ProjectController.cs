@@ -1,25 +1,30 @@
 ﻿using AgileApp.Models.Projects;
+using AgileApp.Models.Tasks;
 using AgileApp.Services.Projects;
+using AgileApp.Services.Tasks;
 using AgileApp.Utils.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgileApp.Controllers
 {
-    [Route("projects/[action]")]
+    [Route("projects/")]
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
         private readonly ICookieHelper _cookieHelper;
+        private readonly ITaskService _taskService;
 
         public ProjectController(
             IProjectService projectService,
-            ICookieHelper cookieHelper)
+            ICookieHelper cookieHelper,
+            ITaskService taskService)
         {
             _projectService = projectService;
             _cookieHelper = cookieHelper;
+            _taskService = taskService;
         }
 
-        [HttpPost]
+        [HttpPost("")]
         public IActionResult AddProject([FromBody] AddProjectRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -44,7 +49,32 @@ namespace AgileApp.Controllers
             return new OkObjectResult(true);
         }
 
-        [HttpGet]
+        [HttpPost("{projectId}/tasks")]
+        public IActionResult AddTask([FromBody] AddTaskRequest request)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (request == null || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            if (request.Name == null)
+            {
+                return new OkObjectResult(Models.Common.Response.Failed());
+            }
+
+            var creationResult = _taskService.AddNewTask(request);
+
+            if (creationResult == null)
+            {
+                return new OkObjectResult(Models.Common.Response.Failed());
+            }
+
+            return new OkObjectResult(true);
+        }
+
+        [HttpGet("")]
         public IActionResult GetAllProjects()
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -57,20 +87,20 @@ namespace AgileApp.Controllers
             return new OkObjectResult(_projectService.GetAllProjects());
         }
 
-        [HttpGet]
-        public IActionResult GetProjectById(int id)
+        [HttpGet("{projectId}")]
+        public IActionResult GetProjectById(int projectId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (projectId < 1 || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_projectService.GetProjectById(id));
+            return new OkObjectResult(_projectService.GetProjectById(projectId));
         }
 
-        [HttpPatch]
+        [HttpPatch("{projectId}")]
         public IActionResult UpdateProject([FromBody] UpdateProjectRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -95,17 +125,17 @@ namespace AgileApp.Controllers
             return new OkObjectResult(_projectService.UpdateProject(projectUpdate));
         }
 
-        [HttpDelete]
-        public IActionResult DeleteProject(int id)
+        [HttpDelete("{projectId}")]
+        public IActionResult DeleteProject(int projectId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (projectId < 1 || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_projectService.DeleteProject(id));
+            return new OkObjectResult(_projectService.DeleteProject(projectId));
         }
     }
 }
