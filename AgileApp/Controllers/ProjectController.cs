@@ -1,4 +1,5 @@
-﻿using AgileApp.Models.Projects;
+﻿using AgileApp.Models.Common;
+using AgileApp.Models.Projects;
 using AgileApp.Models.Tasks;
 using AgileApp.Services.Projects;
 using AgileApp.Services.Tasks;
@@ -136,6 +137,32 @@ namespace AgileApp.Controllers
             }
 
             return new OkObjectResult(_projectService.DeleteProject(projectId));
+        }
+
+        [HttpPut("{projectId}/users/{userId}")]
+        public IActionResult AddUserToProject(int projectId, int userId)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(_projectService.AddUserToProject(new ProjectUserRequest { ProjectId = projectId, UserId = userId }));
+        }
+
+        [HttpDelete("{projectId}/users/{userId}")]
+        public IActionResult RemoveUserFromProject(int projectId, int userId)
+        {
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(_projectService.RemoveUserFromProject(new ProjectUserRequest { ProjectId = projectId, UserId = userId}));
         }
     }
 }
