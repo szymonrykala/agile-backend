@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AgileApp.Controllers
 {
-    [Route("tasks/[action]")]
+    [Route("tasks/")]
     public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
@@ -19,39 +19,12 @@ namespace AgileApp.Controllers
             _cookieHelper = cookieHelper;
         }
 
-        //TODO: DELETE METHODS SHOULD PROVIDE SOME LOGIC!!!
-
-        [HttpPost]
-        public IActionResult AddTask([FromBody] AddTaskRequest request)
-        {
-            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
-
-            if (request == null || !reverseTokenResult.IsValid)
-            {
-                return BadRequest();
-            }
-
-            if (request.Name == null)
-            {
-                return new OkObjectResult(Models.Common.Response.Failed());
-            }
-
-            var creationResult = _taskService.AddNewTask(request);
-
-            if (creationResult == null)
-            {
-                return new OkObjectResult(Models.Common.Response.Failed());
-            }
-
-            return new OkObjectResult(true);
-        }
-
-        [HttpGet]
+        [HttpGet("")]
         public IActionResult GetAllTasks()
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid)
+            if (!reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return new BadRequestResult();
             }
@@ -59,20 +32,20 @@ namespace AgileApp.Controllers
             return new OkObjectResult(_taskService.GetAllTasks());
         }
 
-        [HttpGet]
-        public IActionResult GetTaskById(int id)
+        [HttpGet("{taskId}")]
+        public IActionResult GetTaskById(int taskId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (taskId < 1 || !reverseTokenResult.IsValid)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_taskService.GetTaskById(id));
+            return new OkObjectResult(_taskService.GetTaskById(taskId));
         }
 
-        [HttpPatch]
+        [HttpPatch("{taskId}")]
         public IActionResult UpdateTask([FromBody] UpdateTaskRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
@@ -100,17 +73,17 @@ namespace AgileApp.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult DeleteTask(int id)
+        [HttpDelete("{taskId}")]
+        public IActionResult DeleteTask(int taskId)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (id < 1 || !reverseTokenResult.IsValid)
+            if (taskId < 1 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_taskService.DeleteTask(id));
+            return new OkObjectResult(_taskService.DeleteTask(taskId));
         }
     }
 }

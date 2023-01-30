@@ -47,13 +47,14 @@ namespace AgileApp.Utils.Authorization
             }
         }
 
-        public string GenerateTokenFromLoginData(string email, string hash) =>
+        public string GenerateTokenFromLoginData(string email, int id, int role) =>
             GenerateToken(new JwtProperties
             {
                 Claims = new[]
                 {
                     new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Hash, hash)
+                    new Claim(ClaimTypes.Hash, id.ToString()),
+                    new Claim(ClaimTypes.Role, role.ToString())
                 }
             });
 

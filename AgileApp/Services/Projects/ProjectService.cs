@@ -1,5 +1,5 @@
-﻿using AgileApp.Models.Projects;
-using AgileApp.Models.Requests;
+﻿using AgileApp.Models.Common;
+using AgileApp.Models.Projects;
 using AgileApp.Repository.Projects;
 using AgileApp.Utils;
 
@@ -89,6 +89,34 @@ namespace AgileApp.Services.Projects
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public Response AddUserToProject(ProjectUserRequest request)
+        {
+            try
+            {
+                if (_projectRepository.GetProjUserTable(p => p.Project_Id == request.ProjectId && p.User_Id == request.UserId).ToList().Count == 0)
+                    return _projectRepository.AddUserToProject(request) ? new Response { IsSuccess = true } : new Response { IsSuccess = false, Error = "Altered records different than 1" };
+                else return new Response { IsSuccess = false, Error = "User already exists in the project" };
+            }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false, Error = "Check the number of users in the db" };
+            }
+        }
+
+        public Response RemoveUserFromProject(ProjectUserRequest request)
+        {
+            try
+            {
+                if (_projectRepository.GetProjUserTable(p => p.Project_Id == request.ProjectId && p.User_Id == request.UserId).ToList().Count == 1)
+                    return _projectRepository.RemoveUserFromProject(request) ? new Response { IsSuccess = true } : new Response { IsSuccess = false, Error = "Altered records different than 1" };
+                else return new Response { IsSuccess = false, Error = "User does not exist in the project" };
+            }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false, Error = "Check the number of users in the db" };
             }
         }
     }

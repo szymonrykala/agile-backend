@@ -1,4 +1,5 @@
-﻿using AgileApp.Models.Projects;
+﻿using AgileApp.Models.Common;
+using AgileApp.Models.Projects;
 
 namespace AgileApp.Services.Projects
 {
@@ -6,14 +7,18 @@ namespace AgileApp.Services.Projects
     {
         public List<ProjectResponse> GetAllProjects();
 
-        string AddNewProject(AddProjectRequest project);
+        public string AddNewProject(AddProjectRequest project);
 
-        ProjectResponse GetProjectById(int id);
+        public Response AddUserToProject(ProjectUserRequest request);
 
-        ProjectResponse GetProjectByName(string name);
+        public Response RemoveUserFromProject(ProjectUserRequest request);
 
-        bool UpdateProject(UpdateProjectRequest project);
+        public ProjectResponse GetProjectById(int id);
 
-        bool DeleteProject(int id);
+        public ProjectResponse GetProjectByName(string name);
+
+        public bool UpdateProject(UpdateProjectRequest project);
+
+        public bool DeleteProject(int id);
     }
 }

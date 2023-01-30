@@ -25,7 +25,7 @@ namespace AgileApp.Services.Users
                     .FirstOrDefault();
 
                 return requestedUser != null
-                    ? AuthorizeUserResult.Exist(requestedUser.Hash)
+                    ? AuthorizeUserResult.Exist(requestedUser.Id, (int)requestedUser.Role)
                     : AuthorizeUserResult.NotExist();
             }
             catch (Exception ex)

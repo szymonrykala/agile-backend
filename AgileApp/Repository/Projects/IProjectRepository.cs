@@ -1,4 +1,5 @@
-﻿using AgileApp.Repository.Models;
+﻿using AgileApp.Models.Projects;
+using AgileApp.Repository.Models;
 
 namespace AgileApp.Repository.Projects
 {
@@ -6,14 +7,20 @@ namespace AgileApp.Repository.Projects
     {
         public IEnumerable<ProjectDb> GetAllProjects(Func<ProjectDb, bool> predicate);
 
-        int AddNewProject(ProjectDb project);
+        public IEnumerable<Proj_UserDb> GetProjUserTable(Func<Proj_UserDb, bool> predicate);
 
-        ProjectDb GetProjectById(int id);
+        public int AddNewProject(ProjectDb project);
 
-        ProjectDb GetProjectByName(string name);
+        public bool AddUserToProject(ProjectUserRequest request);
 
-        int UpdateProject(ProjectDb project);
+        public bool RemoveUserFromProject(ProjectUserRequest request);
 
-        int DeleteProject(int id);
+        public ProjectDb GetProjectById(int id);
+
+        public ProjectDb GetProjectByName(string name);
+
+        public int UpdateProject(ProjectDb project);
+
+        public int DeleteProject(int id);
     }
 }

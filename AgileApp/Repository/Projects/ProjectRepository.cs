@@ -1,4 +1,5 @@
-﻿using AgileApp.Repository.Models;
+﻿using AgileApp.Models.Projects;
+using AgileApp.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AgileApp.Repository.Projects
@@ -14,6 +15,8 @@ namespace AgileApp.Repository.Projects
         }
 
         public IEnumerable<ProjectDb> GetAllProjects(Func<ProjectDb, bool> predicate) => ProjectEntities.Where(predicate).ToList();
+
+        public IEnumerable<Proj_UserDb> GetProjUserTable(Func<Proj_UserDb, bool> predicate) => _dbContext.Proj_Users.AsNoTracking().Where(predicate).ToList();
 
         public ProjectDb GetProjectById(int id) => ProjectEntities.FirstOrDefault(p => p.Id == id);
 
@@ -50,6 +53,30 @@ namespace AgileApp.Repository.Projects
             }
 
             return 0;
+        }
+
+        public bool AddUserToProject(ProjectUserRequest request)
+        {
+            var projectUserTable = _dbContext.Proj_Users.FirstOrDefault(p => p.Project_Id == request.ProjectId && p.User_Id == request.UserId);
+            if (projectUserTable != null)
+            {
+                return false;
+            }
+
+            _dbContext.Proj_Users.Add(new Proj_UserDb { Project_Id = request.ProjectId, User_Id = request.UserId });
+            return _dbContext.SaveChanges() == 1;
+        }
+
+        public bool RemoveUserFromProject(ProjectUserRequest request)
+        {
+            var projectUserTable = _dbContext.Proj_Users.FirstOrDefault(p => p.Project_Id == request.ProjectId && p.User_Id == request.UserId);
+            if (projectUserTable != null)
+            {
+                _dbContext.Proj_Users.Remove(projectUserTable);
+                return _dbContext.SaveChanges() == 1;
+            }
+
+            return false;
         }
     }
 }
