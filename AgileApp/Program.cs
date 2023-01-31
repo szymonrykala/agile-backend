@@ -28,7 +28,7 @@ builder.Services.AddScoped<ICookieHelper, CookieHelper>();
 
 builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>
-        policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
 );
 
 var app = builder.Build();
