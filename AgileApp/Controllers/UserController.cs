@@ -1,5 +1,6 @@
 ﻿using AgileApp.Enums;
 using AgileApp.Models;
+using AgileApp.Models.Common;
 using AgileApp.Models.Requests;
 using AgileApp.Services.Users;
 using AgileApp.Utils.Cookies;
@@ -27,6 +28,8 @@ namespace AgileApp.Controllers
         [HttpPost("login/")]
         public async Task<IActionResult> Login([FromBody] AuthorizationDataRequest request)
         {
+            string token = string.Empty;
+
             if (request == null)
             {
                 return BadRequest();
@@ -36,15 +39,19 @@ namespace AgileApp.Controllers
 
             if (authorizationResult == null)
             {
-                return new OkObjectResult(false);
+                return new OkObjectResult(new Response { IsSuccess = false, Error = "Bad credentials" });
             }
 
             if (authorizationResult.Exists)
             {
-                _cookieHelper.AddJwtToHttpOnlyResponseCookie(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
+                token = _cookieHelper.AddJwtToHttpOnlyResponseCookieWithToken(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
             }
 
-            return new OkObjectResult(true);
+            return new OkObjectResult(new Response<Models.Users.AuthorizeResult> 
+            { 
+                IsSuccess = true, 
+                Data = new Models.Users.AuthorizeResult { Token = token, UserId = authorizationResult.Id } 
+            });
         }
 
         [HttpPost("")]

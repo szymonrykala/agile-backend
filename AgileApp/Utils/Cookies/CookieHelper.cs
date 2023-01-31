@@ -27,6 +27,22 @@ namespace AgileApp.Utils.Cookies
                 });
         }
 
+        public string AddJwtToHttpOnlyResponseCookieWithToken(HttpContext context, string email, int id, int role)
+        {
+            string jwtToken = _jwtHelper.GenerateTokenFromLoginData(email, id, role);
+            context.Response.Cookies.Append(AppSettings.JwtCookieKey,
+                jwtToken,
+                new CookieOptions
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.UtcNow.AddMonths(AppSettings.ValidCookieMonthsAmount),
+                    SameSite = SameSiteMode.None
+                });
+
+            return jwtToken;
+        }
+
         public Response InvalidateJwtCookie(HttpContext context)
         {
             try
