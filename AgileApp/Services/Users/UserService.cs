@@ -73,46 +73,52 @@ namespace AgileApp.Services.Users
 
         public bool DeleteUser(int id) => _userRepository.DeleteUser(id) == 1;
 
-        public UserResponse GetUserByEmail(string email)
+        public Models.Users.GetAllUsersResponse GetUserByEmail(string email)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserByEmail(email);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;
         }
 
-        public UserResponse GetUserById(int id)
+        public Models.Users.GetAllUsersResponse GetUserById(int id)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserById(id);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;
         }
 
-        public UserResponse GetUserByName(string userName)
+        public Models.Users.GetAllUsersResponse GetUserByName(string userName)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserByName(userName);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;

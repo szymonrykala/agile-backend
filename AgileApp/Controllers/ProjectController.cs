@@ -37,14 +37,14 @@ namespace AgileApp.Controllers
 
             if (request.Name == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
             var creationResult = _projectService.AddNewProject(request);
 
             if (creationResult == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Adding project internal error"));
             }
 
             return new OkObjectResult(true);
@@ -62,14 +62,14 @@ namespace AgileApp.Controllers
 
             if (request.Name == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
             var creationResult = _taskService.AddNewTask(request);
 
             if (creationResult == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Adding task internal error"));
             }
 
             return new OkObjectResult(true);

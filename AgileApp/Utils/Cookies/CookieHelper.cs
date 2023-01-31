@@ -60,7 +60,7 @@ namespace AgileApp.Utils.Cookies
             catch (Exception ex)
             {
                 //_logger.LogCritical(ex.ToString());
-                return Response.Failed();
+                return Response.Failed("");
             }
         }
 

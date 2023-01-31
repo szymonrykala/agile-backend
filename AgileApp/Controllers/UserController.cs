@@ -47,11 +47,8 @@ namespace AgileApp.Controllers
                 token = _cookieHelper.AddJwtToHttpOnlyResponseCookieWithToken(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
             }
 
-            return new OkObjectResult(new Response<Models.Users.AuthorizeResult> 
-            { 
-                IsSuccess = true, 
-                Data = new Models.Users.AuthorizeResult { Token = token, UserId = authorizationResult.Id } 
-            });
+            return new OkObjectResult(Response<Models.Users.AuthorizeResult>.Succeeded(
+                new Models.Users.AuthorizeResult { Token = token, UserId = authorizationResult.Id }));
         }
 
         [HttpPost("")]
@@ -66,22 +63,22 @@ namespace AgileApp.Controllers
 
             if (request.Email == null || request.FirstName == null || request.LastName == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
             if (isEmailTaken)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Email taken"));
             }
 
             var registerResult = _userService.AddUser(request);
 
             if (registerResult == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Registration internal error"));
             }
 
-            return new OkObjectResult(true);
+            return new OkObjectResult(Models.Common.Response.Succeeded());
         }
 
         [HttpGet("")]
@@ -98,7 +95,7 @@ namespace AgileApp.Controllers
 
             return string.IsNullOrWhiteSpace(hash)
                 ? (IActionResult)new BadRequestResult()
-                : new OkObjectResult(new Response<List<Models.Users.GetAllUsersResponse>> { IsSuccess = true, Data = _userService.GetAllUsers()});
+                : new OkObjectResult(Response<List<Models.Users.GetAllUsersResponse>>.Succeeded(_userService.GetAllUsers()));
         }
 
         [HttpGet("{userId}")]
@@ -111,7 +108,7 @@ namespace AgileApp.Controllers
                 return BadRequest();
             }
 
-            return new OkObjectResult(_userService.GetUserById(userId));
+            return new OkObjectResult(Response<Models.Users.GetAllUsersResponse>.Succeeded(_userService.GetUserById(userId)));
         }
 
         [HttpPatch("{userId}")]
@@ -133,14 +130,14 @@ namespace AgileApp.Controllers
                 userUpdate.LastName = request.LastName ?? string.Empty;
                 userUpdate.Email = request.Email ?? string.Empty;
                 userUpdate.Password = request.Password ?? string.Empty;
-                userUpdate.Role = request.Role ?? _userService.GetUserById(request.Id).Role;
+                userUpdate.Role = request.Role ?? Enum.Parse<UserRoleEnum>(_userService.GetUserById(request.Id).Role);
             }
             catch (Exception)
             {
                 return BadRequest();
             }
 
-            return new OkObjectResult(_userService.UpdateUser(userUpdate));
+            return new OkObjectResult(Response<bool>.Succeeded(_userService.UpdateUser(userUpdate)));
         }
 
         [HttpDelete("{userId}")]
@@ -153,7 +150,7 @@ namespace AgileApp.Controllers
                 return BadRequest();
             }
 
-            return new OkObjectResult(_userService.DeleteUser(userId));
+            return new OkObjectResult(Response<bool>.Succeeded(_userService.DeleteUser(userId)));
         }
     }
 }
