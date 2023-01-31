@@ -98,7 +98,7 @@ namespace AgileApp.Controllers
 
             return string.IsNullOrWhiteSpace(hash)
                 ? (IActionResult)new BadRequestResult()
-                : new OkObjectResult(_userService.GetAllUsers());
+                : new OkObjectResult(new Response<List<Models.Users.GetAllUsersResponse>> { IsSuccess = true, Data = _userService.GetAllUsers()});
         }
 
         [HttpGet("{userId}")]

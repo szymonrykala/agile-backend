@@ -6,7 +6,7 @@ namespace AgileApp.Controllers
     {
         public static bool IsAdmin(Models.Jwt.JwtReverseResult reverseTokenResult)
         {
-            int adminRole = (int)UserRoleEnum.Professor;
+            int adminRole = (int)UserRoleEnum.ADMIN;
             return reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Role)?.Value == adminRole.ToString();
         }
 

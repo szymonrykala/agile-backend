@@ -34,13 +34,13 @@ namespace AgileApp.Services.Users
             }
         }
 
-        public List<UserResponse> GetAllUsers()
+        public List<Models.Users.GetAllUsersResponse> GetAllUsers()
         {
-            var response = new List<UserResponse>();
-            var usersDb = _userRepository.GetAllUsers(u => u.Role == UserRoleEnum.Student || u.Role == UserRoleEnum.Professor).ToList();
+            var response = new List<Models.Users.GetAllUsersResponse>();
+            var usersDb = _userRepository.GetAllUsers(u => u.Role == UserRoleEnum.STUDENT || u.Role == UserRoleEnum.ADMIN).ToList();
 
             foreach (var user in usersDb)
-                response.Add(new UserResponse { FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Role = user.Role });
+                response.Add(new Models.Users.GetAllUsersResponse { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Role = Enum.GetName(user.Role) });
 
             return response;
         }
