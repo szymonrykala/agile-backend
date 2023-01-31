@@ -50,9 +50,7 @@ namespace AgileApp.Controllers
         [HttpPost("")]
         public IActionResult AddUser([FromBody] AuthorizationDataRequest request)
         {
-            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
-
-            if (request == null || !request.IsValid || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (request == null || !request.IsValid)
             {
                 return BadRequest();
             }
