@@ -1,4 +1,5 @@
 ﻿using AgileApp.Models.Files;
+using AgileApp.Services.Files;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgileApp.Controllers
@@ -6,6 +7,13 @@ namespace AgileApp.Controllers
     [Route("files/")]
     public class FileController : Controller
     {
+        private readonly IFileService _fileService;
+
+        public FileController(IFileService fileService)
+        {
+            _fileService = fileService;
+        }
+
         [HttpGet("")]
         public IActionResult GetFiles([FromBody] GetFilesRequest request)
         {
@@ -13,9 +21,9 @@ namespace AgileApp.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult UploadFile([FromBody] UploadFileRequest request)
+        public IActionResult UploadFile([FromForm] UploadFileRequest request)
         {
-            return View();
+            return new OkObjectResult(_fileService.UploadFile(request));
         }
 
         [HttpGet("{fileId}")]
