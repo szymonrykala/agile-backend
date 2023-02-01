@@ -44,7 +44,7 @@ namespace AgileApp.Controllers
 
             if (authorizationResult.Exists)
             {
-                token = _cookieHelper.AddJwtToHttpOnlyResponseCookieWithToken(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
+                token = _cookieHelper.ReturnJwtTokenString(HttpContext, request.Email, authorizationResult.Id, authorizationResult.Role);
             }
 
             return new OkObjectResult(Response<Models.Users.AuthorizeResult>.Succeeded(

@@ -7,7 +7,7 @@ namespace AgileApp.Utils.Cookies
     {
         void AddJwtToHttpOnlyResponseCookie(HttpContext context, string email, int id, int Role);
 
-        string AddJwtToHttpOnlyResponseCookieWithToken(HttpContext context, string email, int id, int Role);
+        string ReturnJwtTokenString(HttpContext context, string email, int id, int Role);
 
         JwtReverseResult ReverseJwtFromRequest(HttpContext context);
 

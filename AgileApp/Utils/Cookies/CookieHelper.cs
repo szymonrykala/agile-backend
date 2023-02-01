@@ -27,19 +27,9 @@ namespace AgileApp.Utils.Cookies
                 });
         }
 
-        public string AddJwtToHttpOnlyResponseCookieWithToken(HttpContext context, string email, int id, int role)
+        public string ReturnJwtTokenString(HttpContext context, string email, int id, int role)
         {
             string jwtToken = _jwtHelper.GenerateTokenFromLoginData(email, id, role);
-            context.Response.Cookies.Append(AppSettings.JwtCookieKey,
-                jwtToken,
-                new CookieOptions
-                {
-                    Secure = true,
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.UtcNow.AddMonths(AppSettings.ValidCookieMonthsAmount),
-                    SameSite = SameSiteMode.None
-                });
-
             return jwtToken;
         }
 
@@ -66,14 +56,14 @@ namespace AgileApp.Utils.Cookies
 
         public JwtReverseResult ReverseJwtFromRequest(HttpContext context)
         {
-            bool hasToken = context.Request.Cookies.TryGetValue(AppSettings.JwtCookieKey, out string jwtToken);
+            string token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
 
-            if (!hasToken || string.IsNullOrWhiteSpace(jwtToken))
+            if (string.IsNullOrWhiteSpace(token))
             {
                 return JwtReverseResult.Invalid();
             }
 
-            return _jwtHelper.ReverseTokenContent(jwtToken);
+            return _jwtHelper.ReverseTokenContent(token);
         }
 
         private void DeleteCookie(HttpContext context, string key)
