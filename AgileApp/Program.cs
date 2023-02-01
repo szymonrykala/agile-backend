@@ -1,4 +1,5 @@
 using AgileApp;
+using AgileApp.Repository.Files;
 using AgileApp.Repository.Projects;
 using AgileApp.Repository.Tasks;
 using AgileApp.Repository.Users;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IJwtHelper, JwtHelper>();
 builder.Services.AddScoped<ICookieHelper, CookieHelper>();
 
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
 
 builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>

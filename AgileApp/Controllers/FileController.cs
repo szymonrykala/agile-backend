@@ -15,9 +15,11 @@ namespace AgileApp.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetFiles([FromBody] GetFilesRequest request)
+        public IActionResult GetFiles([FromBody] GetFileRequest request)
         {
-            return View();
+            var res = _fileService.GetFiles(request);
+
+            return new OkObjectResult(Models.Common.Response<List<GetFileResponse>>.Succeeded(res));
         }
 
         [HttpPost("")]
@@ -29,13 +31,17 @@ namespace AgileApp.Controllers
         [HttpGet("{fileId}")]
         public IActionResult GetFileById(int fileId)
         {
-            return View();
+            string filepath = _fileService.GetFileById(fileId);
+
+            return string.IsNullOrWhiteSpace(filepath) 
+                ? NotFound() 
+                : File(System.IO.File.ReadAllBytes(filepath), "*/*", System.IO.Path.GetFileName(filepath));
         }
 
         [HttpDelete("{fileId}")]
         public IActionResult DeleteFile(int fileId)
         {
-            return View();
+            return new OkObjectResult(_fileService.DeleteFile(fileId));
         }
     }
 }
