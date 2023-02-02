@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AgileApp.Repository.Models;
+using AgileApp.Models;
 
 namespace AgileApp.Repository.Users
 {
@@ -7,6 +8,7 @@ namespace AgileApp.Repository.Users
     {
         private readonly AgileDbContext _dbContext;
         private IQueryable<Models.UserDb> UserEntities => _dbContext.Users.AsNoTracking();
+        public IEnumerable<Proj_UserDb> GetProjUserTable(Func<Proj_UserDb, bool> predicate) => _dbContext.Proj_Users.AsNoTracking().Where(predicate).ToList();
 
         public UserRepository(AgileDbContext dbContext)
         {
@@ -58,6 +60,20 @@ namespace AgileApp.Repository.Users
             }
 
             return 0;
+        }
+
+        public IEnumerable<UserResponse> GetAllUsersOnProject(int id)
+        {
+            var users = GetProjUserTable(u => u.Project_Id == id);
+            var response = new List<UserResponse>();
+
+            foreach (var user in users)
+            {
+                var temp = GetUserById(user.Id);
+                response.Add(new UserResponse { Id = temp.Id, Email = temp.Email, FirstName = temp.FirstName, LastName = temp.LastName, Role = temp.Role });
+            }
+
+            return response;
         }
     }
 }

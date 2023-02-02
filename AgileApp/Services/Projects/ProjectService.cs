@@ -1,6 +1,7 @@
 ﻿using AgileApp.Models.Common;
 using AgileApp.Models.Projects;
 using AgileApp.Repository.Projects;
+using AgileApp.Repository.Users;
 using AgileApp.Utils;
 
 namespace AgileApp.Services.Projects
@@ -8,12 +9,16 @@ namespace AgileApp.Services.Projects
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IUserRepository _userRepository;
 
         public ProjectService(
-            IProjectRepository projectRepository)
+            IProjectRepository projectRepository,
+            IUserRepository userRepository)
         {
             _projectRepository = projectRepository;
+            _userRepository = userRepository;
         }
+
         public bool DeleteProject(int id) => _projectRepository.DeleteProject(id) == 1;
 
         public List<ProjectResponse> GetAllProjects()
@@ -22,7 +27,7 @@ namespace AgileApp.Services.Projects
             var projectsDb = _projectRepository.GetAllProjects(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
             foreach (var project in projectsDb)
-                response.Add(new ProjectResponse { Id = project.Id, Name = project.Name, Description = project.Description });
+                response.Add(new ProjectResponse { Id = project.Id, Name = project.Name, Description = project.Description, Users = _userRepository.GetAllUsersOnProject(project.Id).ToList() });
 
             return response;
         }
@@ -50,12 +55,14 @@ namespace AgileApp.Services.Projects
         public ProjectResponse GetProjectById(int id)
         {
             var response = new ProjectResponse();
-            var userDb = _projectRepository.GetProjectById(id);
+            var projectDb = _projectRepository.GetProjectById(id);
 
-            if (userDb != null)
+            if (projectDb != null)
             {
-                response.Name = userDb.Name;
-                response.Description = userDb.Description;
+                response.Id = projectDb.Id;
+                response.Name = projectDb.Name;
+                response.Description = projectDb.Description;
+                response.Users = _userRepository.GetAllUsersOnProject(id).ToList();
             }
 
             return response;
