@@ -9,8 +9,55 @@ using AgileApp.Services.Tasks;
 using AgileApp.Services.Users;
 using AgileApp.Utils.Authorization;
 using AgileApp.Utils.Cookies;
+using Microsoft.AspNetCore.Authentication.Certificate;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme).AddCertificate(
+    options =>
+    {
+        options.AllowedCertificateTypes = CertificateTypes.All;
+        options.RevocationMode = X509RevocationMode.NoCheck;
+
+        options.Events = new CertificateAuthenticationEvents
+        {
+            OnCertificateValidated = context =>
+            {
+                var claims = new[]
+                {
+                    new Claim(
+                        ClaimTypes.NameIdentifier,
+                        context.ClientCertificate.Subject,
+                        ClaimValueTypes.String, context.Options.ClaimsIssuer),
+                    new Claim(
+                        ClaimTypes.Name,
+                        context.ClientCertificate.Subject,
+                        ClaimValueTypes.String, context.Options.ClaimsIssuer)
+                };
+
+                context.Principal = new ClaimsPrincipal(
+                    new ClaimsIdentity(claims, context.Scheme.Name));
+                context.Success();
+
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    var cert = new X509Certificate2(Path.Combine("ESD", "certS.pfx"), "1234");
+    options.ConfigureHttpsDefaults(o =>
+    {
+        o.ServerCertificate = cert;
+        //o.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -52,7 +99,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication();
+app.UseAuthentication();
 //app.UseAuthorization();
 
 var webSocketOptions = new WebSocketOptions

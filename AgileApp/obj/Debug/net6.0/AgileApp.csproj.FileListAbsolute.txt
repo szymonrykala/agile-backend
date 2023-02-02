@@ -52,3 +52,4 @@ A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWe
 A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
 A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+A:\Studies\AgileBackend\AgileApp\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.Certificate.dll

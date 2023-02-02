@@ -11,6 +11,21 @@
           "lib/net6.0/Humanizer.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Authentication.Certificate/6.0.13": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "6.0.1"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Certificate.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Certificate.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
@@ -486,6 +501,21 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Certificate/6.0.13": {
+      "sha512": "AastyDlLaNrsWSiXPMzfJChNrqvkE7tLDEj7f4yxWgaL5+TP2+TbRBiFSJzRhbqHzfDk67s3S/juVpizbBCsMg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.certificate/6.0.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.Certificate.dll",
+        "lib/net6.0/Microsoft.AspNetCore.Authentication.Certificate.xml",
+        "microsoft.aspnetcore.authentication.certificate.6.0.13.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.certificate.nuspec"
       ]
     },
     "Microsoft.CSharp/4.5.0": {
@@ -1539,6 +1569,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Microsoft.AspNetCore.Authentication.Certificate >= 6.0.13",
       "Microsoft.EntityFrameworkCore >= 7.0.2",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.2",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.2",
@@ -1590,6 +1621,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.Certificate": {
+            "target": "Package",
+            "version": "[6.0.13, )"
+          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[7.0.2, )"

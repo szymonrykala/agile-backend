@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "AgileApp/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.Certificate": "6.0.13",
           "Microsoft.EntityFrameworkCore": "7.0.2",
           "Microsoft.EntityFrameworkCore.Design": "7.0.2",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.2",
@@ -23,6 +24,17 @@
           "lib/net6.0/Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Certificate/6.0.13": {
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "7.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.Certificate.dll": {
+            "assemblyVersion": "6.0.13.0",
+            "fileVersion": "6.0.1322.58013"
           }
         }
       },
@@ -359,6 +371,13 @@
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Certificate/6.0.13": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AastyDlLaNrsWSiXPMzfJChNrqvkE7tLDEj7f4yxWgaL5+TP2+TbRBiFSJzRhbqHzfDk67s3S/juVpizbBCsMg==",
+      "path": "microsoft.aspnetcore.authentication.certificate/6.0.13",
+      "hashPath": "microsoft.aspnetcore.authentication.certificate.6.0.13.nupkg.sha512"
     },
     "Microsoft.CSharp/4.5.0": {
       "type": "package",
