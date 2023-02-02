@@ -22,7 +22,7 @@ namespace AgileApp.Services.Projects
             var projectsDb = _projectRepository.GetAllProjects(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
             foreach (var project in projectsDb)
-                response.Add(new ProjectResponse { Name = project.Name, Description = project.Description });
+                response.Add(new ProjectResponse { Id = project.Id, Name = project.Name, Description = project.Description });
 
             return response;
         }
