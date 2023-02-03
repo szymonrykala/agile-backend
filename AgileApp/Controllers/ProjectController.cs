@@ -76,9 +76,16 @@ namespace AgileApp.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetAProjects()
+        public IActionResult GetAllProjects()
         {
-            return Json(_projectService.GetAllProjects());
+            var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
+
+            if (!reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            {
+                return new BadRequestResult();
+            }
+
+            return new OkObjectResult(_projectService.GetAllProjects());
         }
 
         [HttpGet("{projectId}")]
