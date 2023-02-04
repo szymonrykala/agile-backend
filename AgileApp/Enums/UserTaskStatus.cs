@@ -2,9 +2,9 @@
 {
     public enum UserTaskStatus
     {
-        TODO = 1,
-        IN_PROGRESS = 2,
-        DONE = 4,
-        ARCHIVED = 8
+        TODO = 0,
+        IN_PROGRESS = 1,
+        DONE = 2,
+        ARCHIVED = 4
     }
 }
