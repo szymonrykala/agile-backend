@@ -3,24 +3,15 @@ using System.Net.WebSockets;
 
 namespace AgileApp.Controllers
 {
-    [Route("chat/[action]")]
-    public class ChatController : Controller
+    // <snippet>
+    public class WebSocketController : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public async Task GetMessage()
+        [HttpGet("/chat")]
+        public async Task Get()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-
-                //var socketFinishedTcs = new TaskCompletionSource<object>();
-                //BackgroundSocketProcessor.AddSocket(webSocket, socketFinishedTcs);
-                //await socketFinishedTcs.Task;
-
                 await Echo(webSocket);
             }
             else
@@ -28,6 +19,7 @@ namespace AgileApp.Controllers
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
         }
+        // </snippet>
 
         private static async Task Echo(WebSocket webSocket)
         {
