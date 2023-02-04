@@ -55,7 +55,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPost("{projectId}/tasks")]
-        public IActionResult AddTask([FromBody] AddTaskRequest request)
+        public IActionResult AddTask(int projectId, [FromBody] AddTaskRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -69,6 +69,7 @@ namespace AgileApp.Controllers
                 return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
+            request.ProjectId = projectId;
             var creationResult = _taskService.AddNewTask(request);
 
             if (creationResult == null)
