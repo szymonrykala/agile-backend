@@ -29,7 +29,7 @@ namespace AgileApp.Controllers
             var receiveResult = await webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            var buster = new Models.WebsocketMessage { type = "MESSAGE", payload = new Models.Payload { text = "Moj jest ten kawalek podlogi!", date = DateTime.UtcNow.ToString(), userId = 1, sender = "superUser" } };
+            var buster = new Models.WebsocketMessage { type = "MESSAGE", payload = new Models.Payload { text = "Moj jest ten kawalek podlogi!", date = DateTime.UtcNow.ToString(), userId = 6, sender = "superUser" } };
             string deptObj = JsonSerializer.Serialize<Models.WebsocketMessage>(buster);
             byte[] bytesTTTtable = Encoding.ASCII.GetBytes(deptObj);
             var sendReq = new ArraySegment<byte>(bytesTTTtable);
