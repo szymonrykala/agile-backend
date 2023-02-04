@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
 
 namespace AgileApp.Controllers
 {
@@ -27,10 +29,20 @@ namespace AgileApp.Controllers
             var receiveResult = await webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer), CancellationToken.None);
 
+            //var szymon = Encoding.ASCII.GetString(buffer);
+            //var szymonM = JsonSerializer.Deserialize<Models.WebsocketMessage>(szymon);
+
+            var buster = new Models.WebsocketMessage { text = "Moj jest ten kawalek podlogi!", date = DateTime.UtcNow.ToString(), userId = 1, sender = "superUser" };
+            string deptObj = JsonSerializer.Serialize(new List<Models.WebsocketMessage> { buster });
+            byte[] bytesTTTtable = Encoding.ASCII.GetBytes(deptObj);
+            var sendReq = new ArraySegment<byte>(bytesTTTtable);
+
+            var testBuster = JsonSerializer.Deserialize<List<Models.WebsocketMessage>>(sendReq);
+
             while (!receiveResult.CloseStatus.HasValue)
             {
                 await webSocket.SendAsync(
-                    new ArraySegment<byte>(buffer, 0, receiveResult.Count),
+                    new ArraySegment<byte>(bytesTTTtable, 0, sendReq.Count),
                     receiveResult.MessageType,
                     receiveResult.EndOfMessage,
                     CancellationToken.None);
