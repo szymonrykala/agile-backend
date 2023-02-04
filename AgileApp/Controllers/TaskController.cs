@@ -46,7 +46,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPatch("{taskId}")]
-        public IActionResult UpdateTask([FromBody] UpdateTaskRequest request)
+        public IActionResult UpdateTask(int taskId, [FromBody] UpdateTaskRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -58,7 +58,7 @@ namespace AgileApp.Controllers
             var taskUpdate = new UpdateTaskRequest();
             try
             {
-                taskUpdate.Id = request.Id;
+                taskUpdate.Id = taskId;
                 taskUpdate.Name = request.Name ?? string.Empty;
                 taskUpdate.Description = request.Description ?? string.Empty;
                 taskUpdate.Status = request.Status;

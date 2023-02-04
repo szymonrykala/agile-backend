@@ -120,7 +120,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPatch("{projectId}")]
-        public IActionResult UpdateProject([FromBody] UpdateProjectRequest request)
+        public IActionResult UpdateProject(int projectId, [FromBody] UpdateProjectRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -132,7 +132,7 @@ namespace AgileApp.Controllers
             var projectUpdate = new UpdateProjectRequest();
             try
             {
-                projectUpdate.Id = request.Id;
+                projectUpdate.Id = projectId;
                 projectUpdate.Name = request.Name ?? string.Empty;
                 projectUpdate.Description = request.Description ?? string.Empty;
             }
