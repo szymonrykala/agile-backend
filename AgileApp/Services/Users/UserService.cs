@@ -34,13 +34,13 @@ namespace AgileApp.Services.Users
             }
         }
 
-        public List<UserResponse> GetAllUsers()
+        public List<Models.Users.GetAllUsersResponse> GetAllUsers()
         {
-            var response = new List<UserResponse>();
-            var usersDb = _userRepository.GetAllUsers(u => u.Role == UserRoleEnum.Student || u.Role == UserRoleEnum.Professor).ToList();
+            var response = new List<Models.Users.GetAllUsersResponse>();
+            var usersDb = _userRepository.GetAllUsers(u => u.Role == UserRoleEnum.STUDENT || u.Role == UserRoleEnum.ADMIN).ToList();
 
             foreach (var user in usersDb)
-                response.Add(new UserResponse { FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Role = user.Role });
+                response.Add(new Models.Users.GetAllUsersResponse { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Role = Enum.GetName(user.Role) });
 
             return response;
         }
@@ -73,46 +73,52 @@ namespace AgileApp.Services.Users
 
         public bool DeleteUser(int id) => _userRepository.DeleteUser(id) == 1;
 
-        public UserResponse GetUserByEmail(string email)
+        public Models.Users.GetAllUsersResponse GetUserByEmail(string email)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserByEmail(email);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;
         }
 
-        public UserResponse GetUserById(int id)
+        public Models.Users.GetAllUsersResponse GetUserById(int id)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserById(id);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;
         }
 
-        public UserResponse GetUserByName(string userName)
+        public Models.Users.GetAllUsersResponse GetUserByName(string userName)
         {
-            var response = new UserResponse();
+            var response = new Models.Users.GetAllUsersResponse();
             var userDb = _userRepository.GetUserByName(userName);
 
             if (userDb != null)
             {
+                response.Id = userDb.Id;
                 response.Email = userDb.Email;
                 response.LastName = userDb.LastName;
                 response.FirstName = userDb.FirstName;
+                response.Role = Enum.GetName(userDb.Role);
             }
 
             return response;

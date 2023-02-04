@@ -3,7 +3,7 @@
     public enum UserRoleEnum
     {
         None = 0,
-        Student = 1,
-        Professor = 2
+        STUDENT = 1,
+        ADMIN = 2
     }
 }

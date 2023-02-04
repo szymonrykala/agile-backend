@@ -30,21 +30,25 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
 
             if (request.Name == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
             var creationResult = _projectService.AddNewProject(request);
 
-            if (creationResult == null)
+            if (creationResult == null || !creationResult.IsSuccess || creationResult.Data <= 0)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Adding project internal error"));
+            }
+            else
+            {
+                AddUserToProject(creationResult.Data, JwtMiddleware.GetCurrentUserId(reverseTokenResult));
             }
 
             return new OkObjectResult(true);
@@ -55,21 +59,21 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
 
             if (request.Name == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
             var creationResult = _taskService.AddNewTask(request);
 
             if (creationResult == null)
             {
-                return new OkObjectResult(Models.Common.Response.Failed());
+                return new OkObjectResult(Models.Common.Response.Failed("Adding task internal error"));
             }
 
             return new OkObjectResult(true);
@@ -80,12 +84,25 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return new BadRequestResult();
             }
 
-            return new OkObjectResult(_projectService.GetAllProjects());
+            string hash = reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Hash)?.Value;
+
+            if (string.IsNullOrWhiteSpace(hash))
+            {
+                return new BadRequestResult();
+            }
+
+            var projects = _projectService.GetAllProjects();
+            if (projects == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(Response<List<ProjectResponse>>.Succeeded(projects));
         }
 
         [HttpGet("{projectId}")]
@@ -106,7 +123,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -131,7 +148,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (projectId < 1 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (projectId < 1 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -144,7 +161,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -157,7 +174,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (projectId < 1 || userId < 0 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }

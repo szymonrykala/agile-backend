@@ -1,10 +1,13 @@
-﻿using AgileApp.Repository.Models;
+﻿using AgileApp.Models;
+using AgileApp.Repository.Models;
 
 namespace AgileApp.Repository.Users
 {
     public interface IUserRepository
     {
         public IEnumerable<UserDb> GetAllUsers(Func<UserDb, bool> predicate);
+
+        public IEnumerable<UserResponse> GetAllUsersOnProject(int id);
 
         bool IsEmailAlreadyUsed(string email);
 

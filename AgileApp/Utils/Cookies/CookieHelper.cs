@@ -27,6 +27,12 @@ namespace AgileApp.Utils.Cookies
                 });
         }
 
+        public string ReturnJwtTokenString(HttpContext context, string email, int id, int role)
+        {
+            string jwtToken = _jwtHelper.GenerateTokenFromLoginData(email, id, role);
+            return jwtToken;
+        }
+
         public Response InvalidateJwtCookie(HttpContext context)
         {
             try
@@ -44,20 +50,20 @@ namespace AgileApp.Utils.Cookies
             catch (Exception ex)
             {
                 //_logger.LogCritical(ex.ToString());
-                return Response.Failed();
+                return Response.Failed("");
             }
         }
 
         public JwtReverseResult ReverseJwtFromRequest(HttpContext context)
         {
-            bool hasToken = context.Request.Cookies.TryGetValue(AppSettings.JwtCookieKey, out string jwtToken);
+            string token = context.Request.Headers.Authorization.FirstOrDefault()?.Split(" ").Last();
 
-            if (!hasToken || string.IsNullOrWhiteSpace(jwtToken))
+            if (string.IsNullOrWhiteSpace(token))
             {
                 return JwtReverseResult.Invalid();
             }
 
-            return _jwtHelper.ReverseTokenContent(jwtToken);
+            return _jwtHelper.ReverseTokenContent(token);
         }
 
         private void DeleteCookie(HttpContext context, string key)

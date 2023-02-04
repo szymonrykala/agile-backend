@@ -7,7 +7,7 @@ namespace AgileApp.Services.Projects
     {
         public List<ProjectResponse> GetAllProjects();
 
-        public string AddNewProject(AddProjectRequest project);
+        public Response<int> AddNewProject(AddProjectRequest project);
 
         public Response AddUserToProject(ProjectUserRequest request);
 

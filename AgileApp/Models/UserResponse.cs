@@ -4,6 +4,8 @@ namespace AgileApp.Models
 {
     public class UserResponse
     {
+        public int Id { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -11,7 +13,5 @@ namespace AgileApp.Models
         public string Email { get; set; }
 
         public UserRoleEnum Role { get; set; }
-
-
     }
 }

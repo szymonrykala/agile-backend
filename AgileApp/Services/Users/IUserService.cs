@@ -8,13 +8,13 @@ namespace AgileApp.Services.Users
         Task<AuthorizeUserResult> AuthorizeUser(AuthorizationDataRequest request);
 
         //response may be changed after the design!!!
-        public List<UserResponse> GetAllUsers();
+        public List<Models.Users.GetAllUsersResponse> GetAllUsers();
 
-        public UserResponse GetUserById(int id);
+        public Models.Users.GetAllUsersResponse GetUserById(int id);
 
-        public UserResponse GetUserByName(string userName);
+        public Models.Users.GetAllUsersResponse GetUserByName(string userName);
 
-        public UserResponse GetUserByEmail(string email);
+        public Models.Users.GetAllUsersResponse GetUserByEmail(string email);
 
         public string AddUser(AuthorizationDataRequest request);
 

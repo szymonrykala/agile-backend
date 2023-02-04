@@ -12,10 +12,11 @@
                 IsSuccess = true
             };
 
-        public static Response Failed()
+        public static Response Failed(string error)
             => new Response
             {
-                IsSuccess = false
+                IsSuccess = false,
+                Error = error
             };
     }
 
@@ -34,10 +35,11 @@
                 Data = data
             };
 
-        public static Response<T> Failed()
+        public static Response<T> Failed(string error)
             => new Response<T>
             {
-                IsSuccess = false
+                IsSuccess = false,
+                Error = error
             };
     }
 }

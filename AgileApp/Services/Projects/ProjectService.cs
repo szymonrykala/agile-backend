@@ -1,6 +1,7 @@
 ﻿using AgileApp.Models.Common;
 using AgileApp.Models.Projects;
 using AgileApp.Repository.Projects;
+using AgileApp.Repository.Users;
 using AgileApp.Utils;
 
 namespace AgileApp.Services.Projects
@@ -8,12 +9,16 @@ namespace AgileApp.Services.Projects
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IUserRepository _userRepository;
 
         public ProjectService(
-            IProjectRepository projectRepository)
+            IProjectRepository projectRepository,
+            IUserRepository userRepository)
         {
             _projectRepository = projectRepository;
+            _userRepository = userRepository;
         }
+
         public bool DeleteProject(int id) => _projectRepository.DeleteProject(id) == 1;
 
         public List<ProjectResponse> GetAllProjects()
@@ -22,40 +27,42 @@ namespace AgileApp.Services.Projects
             var projectsDb = _projectRepository.GetAllProjects(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
             foreach (var project in projectsDb)
-                response.Add(new ProjectResponse { Name = project.Name, Description = project.Description });
+                response.Add(new ProjectResponse { Id = project.Id, Name = project.Name, Description = project.Description, Users = _userRepository.GetAllUsersOnProject(project.Id).ToList() });
 
             return response;
         }
 
-        public string AddNewProject(AddProjectRequest project)
+        public Response<int> AddNewProject(AddProjectRequest project)
         {
             try
             {
-                int affectedRows = _projectRepository.AddNewProject(new Repository.Models.ProjectDb
+                int newProjectId= _projectRepository.AddNewProject(new Repository.Models.ProjectDb
                 {
                     Name = project.Name,
                     Description = project.Description
                 });
 
-                return affectedRows == 1
-                    ? "true"
-                    : "false";
+                return newProjectId > 0
+                    ? Response<int>.Succeeded(newProjectId)
+                    : Response<int>.Failed("Cannot obtain project Id");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Response<int>.Failed(ex.Message);
             }
         }
 
         public ProjectResponse GetProjectById(int id)
         {
             var response = new ProjectResponse();
-            var userDb = _projectRepository.GetProjectById(id);
+            var projectDb = _projectRepository.GetProjectById(id);
 
-            if (userDb != null)
+            if (projectDb != null)
             {
-                response.Name = userDb.Name;
-                response.Description = userDb.Description;
+                response.Id = projectDb.Id;
+                response.Name = projectDb.Name;
+                response.Description = projectDb.Description;
+                response.Users = _userRepository.GetAllUsersOnProject(id).ToList();
             }
 
             return response;
