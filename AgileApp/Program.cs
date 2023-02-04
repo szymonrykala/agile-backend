@@ -63,7 +63,7 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSingleton<AgileDbContext>();
+builder.Services.AddDbContext<AgileDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
