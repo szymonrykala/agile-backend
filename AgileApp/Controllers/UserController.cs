@@ -86,7 +86,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return new BadRequestResult();
             }
@@ -116,7 +116,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }
@@ -145,7 +145,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (userId < 1 || !reverseTokenResult.IsValid || !RoleCheckUtils.IsAdmin(reverseTokenResult))
+            if (userId < 1 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
             {
                 return BadRequest();
             }

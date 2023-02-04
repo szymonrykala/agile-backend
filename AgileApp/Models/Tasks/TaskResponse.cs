@@ -4,10 +4,16 @@ namespace AgileApp.Models.Tasks
 {
     public class TaskResponse
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
+
+        public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public UserTaskStatus Status { get; set; } 
+        public string Status { get; set; } 
+
+        public int UserId { get; set; }
+
+        public int ProjectId { get; set; }
     }
 }

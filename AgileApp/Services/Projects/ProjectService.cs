@@ -32,23 +32,23 @@ namespace AgileApp.Services.Projects
             return response;
         }
 
-        public string AddNewProject(AddProjectRequest project)
+        public Response<int> AddNewProject(AddProjectRequest project)
         {
             try
             {
-                int affectedRows = _projectRepository.AddNewProject(new Repository.Models.ProjectDb
+                int newProjectId= _projectRepository.AddNewProject(new Repository.Models.ProjectDb
                 {
                     Name = project.Name,
                     Description = project.Description
                 });
 
-                return affectedRows == 1
-                    ? "true"
-                    : "false";
+                return newProjectId > 0
+                    ? Response<int>.Succeeded(newProjectId)
+                    : Response<int>.Failed("Cannot obtain project Id");
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Response<int>.Failed(ex.Message);
             }
         }
 
