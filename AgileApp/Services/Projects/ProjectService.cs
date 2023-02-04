@@ -2,6 +2,8 @@
 using AgileApp.Models.Projects;
 using AgileApp.Repository.Projects;
 using AgileApp.Repository.Users;
+using AgileApp.Services.Files;
+using AgileApp.Services.Tasks;
 using AgileApp.Utils;
 
 namespace AgileApp.Services.Projects
@@ -10,16 +12,32 @@ namespace AgileApp.Services.Projects
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ITaskService _taskService;
+        private readonly IFileService _fileService;
 
         public ProjectService(
             IProjectRepository projectRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ITaskService taskService,
+            IFileService fileService)
         {
             _projectRepository = projectRepository;
             _userRepository = userRepository;
+            _taskService = taskService;
+            _fileService = fileService;
         }
 
-        public bool DeleteProject(int id) => _projectRepository.DeleteProject(id) == 1;
+        public bool DeleteProject(int id)
+        {
+            var tasks = _taskService.GetAllTasks().Where(t => t.ProjectId == id);
+            if (tasks.Count() > 0)
+                foreach (var task in tasks)
+                {
+                    _taskService.DeleteTask(task.Id);
+                }
+
+            return _projectRepository.DeleteProject(id) == 1;
+        }
 
         public List<ProjectResponse> GetAllProjects()
         {
