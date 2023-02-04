@@ -16,7 +16,7 @@ namespace AgileApp.Services.Files
 
         public Response<bool> UploadFile(Models.Files.UploadFileRequest file)
         {
-            if (file == null)
+            if (file == null || file.FileData == null)
                 return Response<bool>.Failed("The file is too large or missing");
 
             try
