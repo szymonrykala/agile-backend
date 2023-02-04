@@ -85,7 +85,20 @@ namespace AgileApp.Controllers
                 return new BadRequestResult();
             }
 
-            return new OkObjectResult(_projectService.GetAllProjects());
+            string hash = reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Hash)?.Value;
+
+            if (string.IsNullOrWhiteSpace(hash))
+            {
+                return new BadRequestResult();
+            }
+
+            var projects = _projectService.GetAllProjects();
+            if (projects == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(Response<List<ProjectResponse>>.Succeeded(projects));
         }
 
         [HttpGet("{projectId}")]
