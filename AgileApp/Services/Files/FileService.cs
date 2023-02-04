@@ -83,9 +83,12 @@ namespace AgileApp.Services.Files
 
         public List<GetFileResponse> GetFiles(GetFileRequest request)
         {
+            var repositoryRes = new List<FileDb>();
             var response = new List<GetFileResponse>();
-
-            var repositoryRes = _fileRepository.GetAllFiles(f => (request.ProjectId > 0 && f.Project_Id == request.ProjectId) || (request.TaskId > 0 && f.Task_Id == request.TaskId)).ToList();
+            if (request == null)
+                repositoryRes = _fileRepository.GetAllFiles(f => f.Project_Id != 0).ToList();
+            else
+                repositoryRes = _fileRepository.GetAllFiles(f => (request.ProjectId > 0 && f.Project_Id == request.ProjectId) || (request.TaskId > 0 && f.Task_Id == request.TaskId)).ToList();
             foreach (var item in repositoryRes)
             {
                 response.Add(new GetFileResponse { Id = item.Id, Link = item.Path, ModificationDate = item.Modification_Date, Name = item.Name, UserId = item.User_Id });
