@@ -55,7 +55,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPost("{projectId}/tasks")]
-        public IActionResult AddTask([FromBody] AddTaskRequest request)
+        public IActionResult AddTask(int projectId, [FromBody] AddTaskRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -69,6 +69,7 @@ namespace AgileApp.Controllers
                 return new OkObjectResult(Models.Common.Response.Failed("Mandatory field missing"));
             }
 
+            request.ProjectId = projectId;
             var creationResult = _taskService.AddNewTask(request);
 
             if (creationResult == null)
@@ -99,7 +100,7 @@ namespace AgileApp.Controllers
             var projects = _projectService.GetAllProjects();
             if (projects == null)
             {
-                return new NotFoundResult();
+                return new OkObjectResult(Response<List<ProjectResponse>>.Succeeded(new List<ProjectResponse>()));
             }
 
             return new OkObjectResult(Response<List<ProjectResponse>>.Succeeded(projects));
@@ -119,7 +120,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPatch("{projectId}")]
-        public IActionResult UpdateProject([FromBody] UpdateProjectRequest request)
+        public IActionResult UpdateProject(int projectId, [FromBody] UpdateProjectRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -131,7 +132,7 @@ namespace AgileApp.Controllers
             var projectUpdate = new UpdateProjectRequest();
             try
             {
-                projectUpdate.Id = request.Id;
+                projectUpdate.Id = projectId;
                 projectUpdate.Name = request.Name ?? string.Empty;
                 projectUpdate.Description = request.Description ?? string.Empty;
             }

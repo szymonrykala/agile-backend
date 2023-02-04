@@ -22,7 +22,7 @@ namespace AgileApp.Services.Tasks
             var tasksDb = _taskRepository.GetAllTasks(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
             foreach (var task in tasksDb)
-                response.Add(new TaskResponse { Id = task.Id, Title = task.Name, Description = task.Description, Status = Enum.GetName(task.Status), ProjectId = task.ProjectId, UserId = task.UserId });
+                response.Add(new TaskResponse { Id = task.Id, Name = task.Name, Description = task.Description, Status = Enum.GetName(task.Status), ProjectId = task.ProjectId, UserId = task.UserId });
 
             return response;
         }
@@ -58,7 +58,7 @@ namespace AgileApp.Services.Tasks
             if (userDb != null)
             {
                 response.Id = userDb.Id;
-                response.Title = userDb.Name;
+                response.Name = userDb.Name;
                 response.Status = Enum.GetName(userDb.Status);
                 response.Description = userDb.Description;
                 response.ProjectId = userDb.ProjectId;
@@ -76,7 +76,7 @@ namespace AgileApp.Services.Tasks
             if (userDb != null)
             {
                 response.Id = userDb.Id;
-                response.Title = userDb.Name;
+                response.Name = userDb.Name;
                 response.Status = Enum.GetName(userDb.Status);
                 response.Description = userDb.Description;
                 response.ProjectId = userDb.ProjectId;

@@ -2,10 +2,9 @@
 {
     public enum UserTaskStatus
     {
-        Unassigned = 0,
-        Assigned = 1,
-        WorkStarted = 2,
-        WorkCompleted = 4,
-        Archived = 8
+        TODO = 0,
+        IN_PROGRESS = 1,
+        DONE = 2,
+        ARCHIVED = 4
     }
 }

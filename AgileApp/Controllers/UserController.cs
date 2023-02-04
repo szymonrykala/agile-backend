@@ -112,7 +112,7 @@ namespace AgileApp.Controllers
         }
 
         [HttpPatch("{userId}")]
-        public IActionResult UpdateUser([FromBody] UpdateUserRequest request)
+        public IActionResult UpdateUser(int userId, [FromBody] UpdateUserRequest request)
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
@@ -125,7 +125,7 @@ namespace AgileApp.Controllers
             var userUpdate = new UpdateUserRequest();
             try
             {
-                userUpdate.Id = request.Id;
+                userUpdate.Id = userId;
                 userUpdate.FirstName = request.FirstName ?? string.Empty;
                 userUpdate.LastName = request.LastName ?? string.Empty;
                 userUpdate.Email = request.Email ?? string.Empty;
