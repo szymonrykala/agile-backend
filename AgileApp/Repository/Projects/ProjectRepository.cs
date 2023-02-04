@@ -26,7 +26,9 @@ namespace AgileApp.Repository.Projects
         public int AddNewProject(ProjectDb project)
         {
             _dbContext.Projects.Add(project);
-            return _dbContext.SaveChanges();
+            _dbContext.SaveChanges();
+
+            return project.Id;
         }
 
         public int DeleteProject(int id)

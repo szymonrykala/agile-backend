@@ -69,7 +69,7 @@ namespace AgileApp.Repository.Users
 
             foreach (var user in users)
             {
-                var temp = GetUserById(user.Id);
+                var temp = GetUserById(user.User_Id);
                 response.Add(new UserResponse { Id = temp.Id, Email = temp.Email, FirstName = temp.FirstName, LastName = temp.LastName, Role = temp.Role });
             }
 

@@ -2,7 +2,7 @@
 
 namespace AgileApp.Controllers
 {
-    public class RoleCheckUtils
+    public class JwtMiddleware
     {
         public static bool IsAdmin(Models.Jwt.JwtReverseResult reverseTokenResult)
         {
@@ -34,6 +34,32 @@ namespace AgileApp.Controllers
             }
 
             return userRoleResponse;
+        }
+
+        public static int GetCurrentUserId(Models.Jwt.JwtReverseResult reverseTokenResult)
+        {
+            int userIdResponse = 0;
+
+            if (reverseTokenResult == null)
+                return userIdResponse;
+
+            string userRole = reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Hash)?.Value;
+
+            if (string.IsNullOrWhiteSpace(userRole))
+                return userIdResponse;
+
+            try
+            {
+                int id = 0;
+                int.TryParse(userRole, out id);
+                userIdResponse = id;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+
+            return userIdResponse;
         }
     }
 }
