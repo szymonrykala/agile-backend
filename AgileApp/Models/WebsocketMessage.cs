@@ -2,6 +2,13 @@
 {
     public class WebsocketMessage
     {
+        public Payload payload { get; set; }
+
+        public string type { get; set; }
+    }
+
+    public class Payload
+    {
         public string text { get; set; }
 
         public string date { get; set; }
