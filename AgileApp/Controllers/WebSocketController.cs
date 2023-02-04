@@ -29,16 +29,12 @@ namespace AgileApp.Controllers
             var receiveResult = await webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            var szymon = Encoding.ASCII.GetString(buffer);
-            string s = "[{\"text\":\"Moj jest ten kawalek podlogi!\",\"date\":\"2/4/2023 10:50:13 PM\",\"userId\":1,\"sender\":\"superUser\"}]";
-            var szymonM = JsonSerializer.Deserialize<List<Models.WebsocketMessage>>(s);
-
             var buster = new Models.WebsocketMessage { type = "MESSAGE", payload = new Models.Payload { text = "Moj jest ten kawalek podlogi!", date = DateTime.UtcNow.ToString(), userId = 1, sender = "superUser" } };
-            string deptObj = JsonSerializer.Serialize(new List<Models.WebsocketMessage> { buster });
+            string deptObj = JsonSerializer.Serialize<Models.WebsocketMessage>(buster);
             byte[] bytesTTTtable = Encoding.ASCII.GetBytes(deptObj);
             var sendReq = new ArraySegment<byte>(bytesTTTtable);
 
-            var testBuster = JsonSerializer.Deserialize<List<Models.WebsocketMessage>>(sendReq);
+            //var testBuster = JsonSerializer.Deserialize<List<Models.WebsocketMessage>>(sendReq);
 
             while (!receiveResult.CloseStatus.HasValue)
             {
