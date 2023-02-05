@@ -34,7 +34,7 @@ namespace AgileApp.Controllers
         }
         // </snippet>
 
-        private static async Task Echo(WebSocket webSocket)
+        private async Task Echo(WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];
             var receiveResult = await webSocket.ReceiveAsync(
@@ -42,24 +42,35 @@ namespace AgileApp.Controllers
 
             while (!receiveResult.CloseStatus.HasValue)
             {
-                //await webSocket.SendAsync(
-                //    new ArraySegment<byte>(buffer, 0, receiveResult.Count),
-                //    receiveResult.MessageType,
-                //    receiveResult.EndOfMessage,
-                //    CancellationToken.None);
-
                 receiveResult = await webSocket.ReceiveAsync(
                     new ArraySegment<byte>(buffer), CancellationToken.None);
 
-                string s = Encoding.ASCII.GetString(buffer);
-
-                var xd = "";
+                await Send(buffer);
             }
 
             await webSocket.CloseAsync(
                 receiveResult.CloseStatus.Value,
                 receiveResult.CloseStatusDescription,
                 CancellationToken.None);
+        }
+
+        private static T Deserialize<T>(byte[] data) where T : class
+        {
+            using (var stream = new MemoryStream(data))
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+                return Newtonsoft.Json.JsonSerializer.Create().Deserialize(reader, typeof(T)) as T;
+        }
+
+        private async Task Send(byte[] buffer)
+        {
+            string s = Encoding.ASCII.GetString(buffer);
+            s = s.Trim();
+            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.WebsocketMessage>(s);
+
+            int count = 0;
+            var message = PrepareMessageFromObject(obj);
+
+            _chatService.SendMessage(message);
         }
 
         private async Task Load(WebSocket webSocket)
@@ -81,6 +92,14 @@ namespace AgileApp.Controllers
                         true,
                         CancellationToken.None);
             }
+        }
+
+        private static string PrepareMessageFromObject(Models.WebsocketMessage payload)
+        {
+            string json = JsonSerializer.Serialize<Models.WebsocketMessage>(payload);
+            json = json.Replace(@"\u0022", "\"");
+
+            return json;
         }
 
         private byte[] PrepareMessageFromList(Models.WebsocketMessageLoad payload, out int count)

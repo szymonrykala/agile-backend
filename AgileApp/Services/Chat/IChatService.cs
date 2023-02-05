@@ -4,6 +4,6 @@
     {
         public List<string> Load();
 
-        public Task SendMessage(string message);
+        public bool SendMessage(string message);
     }
 }

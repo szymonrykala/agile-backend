@@ -31,7 +31,15 @@
         public bool SendMessage(string message)
         {
             _dbContext.Messages.Add(new Models.MessageDb { Json_Text = message });
-            return _dbContext.SaveChanges() == 1;
+            try
+            {
+                return _dbContext.SaveChanges() == 1;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

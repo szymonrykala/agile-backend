@@ -13,9 +13,14 @@ namespace AgileApp.Services.Chat
 
         public List<string> Load() => _chatRepository.Load();
 
-        public Task SendMessage(string message)
+        public bool SendMessage(string message)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(message))
+            {
+                return _chatRepository.SendMessage(message);
+            }
+
+            return false;
         }
     }
 }
