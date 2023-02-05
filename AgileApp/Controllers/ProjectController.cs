@@ -59,10 +59,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (request == null) return BadRequest();
+            if (!reverseTokenResult.IsValid) return Unauthorized();
+
 
             if (request.Name == null)
             {
@@ -85,10 +84,8 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid)
-            {
-                return new BadRequestResult();
-            }
+            if (!reverseTokenResult.IsValid) return Unauthorized();
+
 
             string hash = reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Hash)?.Value;
 
@@ -111,10 +108,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (projectId < 1 || !reverseTokenResult.IsValid)
-            {
-                return BadRequest();
-            }
+            if (projectId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid) return Unauthorized();
+
 
             return new OkObjectResult(_projectService.GetProjectById(projectId));
         }
@@ -124,10 +120,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (request == null) return BadRequest();
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult)) return Unauthorized();
+
 
             var projectUpdate = new UpdateProjectRequest();
             try
@@ -149,10 +144,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (projectId < 1 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (projectId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult)) return Unauthorized();
+
 
             return new OkObjectResult(_projectService.DeleteProject(projectId));
         }
@@ -180,7 +174,7 @@ namespace AgileApp.Controllers
                 return BadRequest();
             }
 
-            return new OkObjectResult(_projectService.RemoveUserFromProject(new ProjectUserRequest { ProjectId = projectId, UserId = userId}));
+            return new OkObjectResult(_projectService.RemoveUserFromProject(new ProjectUserRequest { ProjectId = projectId, UserId = userId }));
         }
     }
 }
