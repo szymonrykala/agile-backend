@@ -11,6 +11,6 @@ namespace AgileApp.Services.Files
 
         public Response DeleteFile(int id);
 
-        public List<GetFileResponse> GetFiles(GetFileRequest request);
+        public List<GetFileResponse> GetFiles(int taskId, int projectId);
     }
 }

@@ -14,10 +14,13 @@ namespace AgileApp.Controllers
             _fileService = fileService;
         }
 
-        [HttpGet("")]
-        public IActionResult GetFiles([FromBody] GetFileRequest request)
+        [HttpGet()]
+        public IActionResult GetFiles([FromQuery] int taskId = -1, [FromQuery] int projectId = -1)
         {
-            var res = _fileService.GetFiles(request);
+
+            if (projectId == -1 && taskId == -1) return BadRequest();
+
+            var res = _fileService.GetFiles(taskId, projectId);
 
             return new OkObjectResult(Models.Common.Response<List<GetFileResponse>>.Succeeded(res));
         }
@@ -33,8 +36,8 @@ namespace AgileApp.Controllers
         {
             string filepath = _fileService.GetFileById(fileId);
 
-            return string.IsNullOrWhiteSpace(filepath) 
-                ? NotFound() 
+            return string.IsNullOrWhiteSpace(filepath)
+                ? NotFound()
                 : File(System.IO.File.ReadAllBytes(filepath), "*/*", System.IO.Path.GetFileName(filepath));
         }
 
