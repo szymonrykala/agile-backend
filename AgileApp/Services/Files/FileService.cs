@@ -21,8 +21,8 @@ namespace AgileApp.Services.Files
 
             try
             {
-                int projectId = file.ProjectId;
-                int taskId = file.TaskId;
+                int projectId = file?.ProjectId ?? 0;
+                int taskId = file?.TaskId ?? 0;
                 var uploadPath = Path.Combine("Upload", projectId.ToString(), taskId.ToString());
                 var fileFullPath = Path.Combine(uploadPath, file.FileData.FileName);
 
@@ -81,14 +81,21 @@ namespace AgileApp.Services.Files
             return _fileRepository.DeleteFile(id);
         }
 
-        public List<GetFileResponse> GetFiles(GetFileRequest request)
+        public List<GetFileResponse> GetFiles(int taskId, int projectId)
         {
             var repositoryRes = new List<FileDb>();
             var response = new List<GetFileResponse>();
-            if (request == null)
-                repositoryRes = _fileRepository.GetAllFiles(f => f.Project_Id != 0).ToList();
+
+            if ((projectId != -1 && taskId != -1) || taskId != -1)
+                repositoryRes = _fileRepository.GetAllFiles(f => f.Task_Id == taskId).ToList();
+
+            else if (projectId != -1)
+                repositoryRes = _fileRepository.GetAllFiles(f => f.Project_Id == projectId).ToList();
             else
-                repositoryRes = _fileRepository.GetAllFiles(f => (request.ProjectId > 0 && f.Project_Id == request.ProjectId) || (request.TaskId > 0 && f.Task_Id == request.TaskId)).ToList();
+            {
+                return response;
+            }
+
             foreach (var item in repositoryRes)
             {
                 response.Add(new GetFileResponse { Id = item.Id, Link = item.Path, ModificationDate = item.Modification_Date, Name = item.Name, UserId = item.User_Id });

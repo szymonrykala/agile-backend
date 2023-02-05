@@ -37,7 +37,7 @@ namespace AgileApp.Services.Users
         public List<Models.Users.GetAllUsersResponse> GetAllUsers()
         {
             var response = new List<Models.Users.GetAllUsersResponse>();
-            var usersDb = _userRepository.GetAllUsers(u => u.Role == UserRoleEnum.STUDENT || u.Role == UserRoleEnum.ADMIN).ToList();
+            var usersDb = _userRepository.GetAllUsers();
 
             foreach (var user in usersDb)
                 response.Add(new Models.Users.GetAllUsersResponse { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email, Role = Enum.GetName(user.Role) });
@@ -58,7 +58,7 @@ namespace AgileApp.Services.Users
                     Password = request.Password,
                     LastName = request.LastName,
                     FirstName = request.FirstName,
-                    Role = (UserRoleEnum)request.Role
+                    Role = UserRoleEnum.STUDENT
                 });
 
                 return affectedRows == 1
@@ -134,7 +134,6 @@ namespace AgileApp.Services.Users
                 dbUser.LastName = dbUser.LastName.PropertyStringCompare(user.LastName);
                 dbUser.FirstName = dbUser.FirstName.PropertyStringCompare(user.FirstName);
 
-                dbUser.Password = dbUser.Password.PropertyStringCompare(user.Password);
                 dbUser.Role = user.Role != null && user.Role != dbUser.Role ? (UserRoleEnum)user.Role : dbUser.Role;
 
                 return _userRepository.UpdateUser(dbUser) == 1;

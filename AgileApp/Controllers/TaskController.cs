@@ -24,10 +24,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return new BadRequestResult();
-            }
+            if (!reverseTokenResult.IsValid) return Forbid();
 
             return new OkObjectResult(_taskService.GetAllTasks());
         }
@@ -37,10 +34,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (taskId < 1 || !reverseTokenResult.IsValid)
-            {
-                return BadRequest();
-            }
+            if (taskId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid) return Forbid();
+
 
             return new OkObjectResult(_taskService.GetTaskById(taskId));
         }
@@ -50,10 +46,9 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid)
-            {
-                return BadRequest();
-            }
+            if (request == null) return BadRequest();
+            if (!reverseTokenResult.IsValid) return Forbid();
+
 
             var taskUpdate = new UpdateTaskRequest();
             try
@@ -78,10 +73,8 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (taskId < 1 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (taskId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult)) return Unauthorized();
 
             return new OkObjectResult(_taskService.DeleteTask(taskId));
         }

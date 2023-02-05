@@ -12,7 +12,7 @@ namespace AgileApp.Controllers
 
         public static UserRoleEnum CheckUserRole(Models.Jwt.JwtReverseResult reverseTokenResult)
         {
-            UserRoleEnum userRoleResponse = UserRoleEnum.None;
+            UserRoleEnum userRoleResponse = UserRoleEnum.STUDENT;
 
             if (reverseTokenResult == null)
                 return userRoleResponse;
@@ -22,15 +22,15 @@ namespace AgileApp.Controllers
             if (string.IsNullOrWhiteSpace(userRole))
                 return userRoleResponse;
 
+            int role = (int)UserRoleEnum.STUDENT;
             try
             {
-                int role = 0;
                 int.TryParse(userRole, out role);
                 userRoleResponse = (UserRoleEnum)role;
             }
             catch (Exception)
             {
-                return UserRoleEnum.None;
+                return UserRoleEnum.STUDENT;
             }
 
             return userRoleResponse;

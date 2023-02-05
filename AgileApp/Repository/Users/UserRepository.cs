@@ -15,6 +15,8 @@ namespace AgileApp.Repository.Users
             _dbContext = dbContext;
         }
 
+        public IEnumerable<UserDb> GetAllUsers() => UserEntities.ToList();
+
         public IEnumerable<UserDb> GetAllUsers(Func<UserDb, bool> predicate) => UserEntities.Where(predicate).ToList();
 
         public UserDb GetUserById(int id) => UserEntities.FirstOrDefault(u => u.Id == id);

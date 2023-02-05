@@ -5,6 +5,8 @@ namespace AgileApp.Repository.Users
 {
     public interface IUserRepository
     {
+        public IEnumerable<UserDb> GetAllUsers();
+
         public IEnumerable<UserDb> GetAllUsers(Func<UserDb, bool> predicate);
 
         public IEnumerable<UserResponse> GetAllUsersOnProject(int id);

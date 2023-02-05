@@ -86,10 +86,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return new BadRequestResult();
-            }
+            if (!reverseTokenResult.IsValid) return Unauthorized();
 
             string hash = reverseTokenResult.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Hash)?.Value;
 
@@ -103,10 +100,8 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (userId < 1 || !reverseTokenResult.IsValid)
-            {
-                return BadRequest();
-            }
+            if (userId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid) return Unauthorized();
 
             return new OkObjectResult(Response<Models.Users.GetAllUsersResponse>.Succeeded(_userService.GetUserById(userId)));
         }
@@ -116,10 +111,8 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (request == null || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (request == null) return BadRequest();
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult)) return Unauthorized();
 
 
             var userUpdate = new UpdateUserRequest();
@@ -130,6 +123,7 @@ namespace AgileApp.Controllers
                 userUpdate.LastName = request.LastName ?? string.Empty;
                 userUpdate.Email = request.Email ?? string.Empty;
                 userUpdate.Password = request.Password ?? string.Empty;
+
                 userUpdate.Role = request.Role ?? Enum.Parse<UserRoleEnum>(_userService.GetUserById(request.Id).Role);
             }
             catch (Exception)
@@ -145,10 +139,8 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (userId < 1 || !reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
-            {
-                return BadRequest();
-            }
+            if (userId < 1) return BadRequest();
+            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult)) return Unauthorized();
 
             return new OkObjectResult(Response<bool>.Succeeded(_userService.DeleteUser(userId)));
         }
