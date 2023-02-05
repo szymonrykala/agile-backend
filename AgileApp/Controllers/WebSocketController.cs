@@ -67,10 +67,12 @@ namespace AgileApp.Controllers
             s = s.Trim();
             var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.WebsocketMessage>(s);
 
-            int count = 0;
-            var message = PrepareMessageFromObject(obj);
+            if (obj.type == "MESSAGE")
+            {
+                var message = PrepareMessageFromObject(obj);
 
-            _chatService.SendMessage(message);
+                _chatService.SendMessage(message);
+            }
         }
 
         private async Task Load(WebSocket webSocket)
@@ -96,7 +98,7 @@ namespace AgileApp.Controllers
 
         private static string PrepareMessageFromObject(Models.WebsocketMessage payload)
         {
-            string json = JsonSerializer.Serialize<Models.WebsocketMessage>(payload);
+            string json = JsonSerializer.Serialize<Models.Payload>(payload.payload);
             json = json.Replace(@"\u0022", "\"");
 
             return json;
