@@ -21,8 +21,8 @@ namespace AgileApp.Services.Files
 
             try
             {
-                int projectId = file.ProjectId;
-                int taskId = file.TaskId;
+                int projectId = file?.ProjectId ?? 0;
+                int taskId = file?.TaskId ?? 0;
                 var uploadPath = Path.Combine("Upload", projectId.ToString(), taskId.ToString());
                 var fileFullPath = Path.Combine(uploadPath, file.FileData.FileName);
 
