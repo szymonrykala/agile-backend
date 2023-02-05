@@ -85,7 +85,7 @@ namespace AgileApp.Controllers
         {
             var reverseTokenResult = _cookieHelper.ReverseJwtFromRequest(HttpContext);
 
-            if (!reverseTokenResult.IsValid || !JwtMiddleware.IsAdmin(reverseTokenResult))
+            if (!reverseTokenResult.IsValid)
             {
                 return new BadRequestResult();
             }
