@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using AgileApp.Repository.Chat;
+using AgileApp.Services.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +80,9 @@ builder.Services.AddScoped<ICookieHelper, CookieHelper>();
 
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>
